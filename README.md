@@ -1,2 +1,2 @@
 # C-Sharp-OOP
-Software Guild's C# OOP Cours
+Software Guild's C# OOP Course
