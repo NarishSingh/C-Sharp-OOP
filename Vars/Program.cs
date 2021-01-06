@@ -45,15 +45,15 @@ namespace Vars
 
             /*obj creation*/
             Person p = new Person("Mary", 59);
-            Person p2 = p; //copies the pointer
+            Person p2 = p; //copies the pointer, not a new obj
             Console.WriteLine(p.name);
             Console.WriteLine(p.age);
             Console.WriteLine(p2.name);
             Console.WriteLine(p2.age);
 
-            /*expr*/
+            //expr's
             int result = 2 + 2;
-            const int constant = 5;
+            const int constant = 5; //a constant
             Console.WriteLine(result);
             Console.WriteLine(constant + constant);
 
@@ -61,10 +61,26 @@ namespace Vars
             int y = 99;
             Console.WriteLine(add(x, y));
 
-
             //arrays
-            int[] nums = {3,4};
+            int[] nums = { 3, 4 };
             Console.WriteLine(add(nums[0], nums[1]));
+
+            //numeric literals
+            int intNum = 1234;
+            long longNum = 1234L;
+            double pi = 3.14;
+            float piFloat = 3.14F;
+            decimal piDec = 3.14M;
+            if (intNum is int && longNum is long && pi is double && piFloat is float && piDec is decimal)
+            {
+                Console.WriteLine("Suffixes works!");
+            }
+
+            //String literals
+            string path1 = "c:\\My Documents\\MyFile.txt";
+            string path2 = @"c:\My Documents\MyFile.txt"; //use !"" to not have to add escapes
+            Console.WriteLine(path1);
+            Console.WriteLine(path2);
         }
     }
 }
