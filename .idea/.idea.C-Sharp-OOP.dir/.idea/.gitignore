@@ -1,0 +1,13 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/contentModel.xml
+/modules.xml
+/projectSettingsUpdater.xml
+/.idea.C-Sharp-OOP.iml
+# Datasource local storage ignored files
+/../../../../../../../../../../../:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\.idea\.idea.C-Sharp-OOP.dir\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
