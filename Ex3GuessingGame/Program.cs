@@ -31,31 +31,71 @@ namespace Ex3GuessingGame
                     return output;
                 }
 
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Not an integer...");
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
         static void Main(string[] args)
         {
             Random r = new Random();
-            int num = r.Next(21);
+            int num = 1;
             bool guessing = true;
+            bool levelSelected = false;
             int attempts = 0;
+            //bounds
+            int lower = 1;
+            int higher = 0;
 
+            //name and difficulty
             Console.Write("Enter your name: ");
             string name = Console.ReadLine();
-            Console.WriteLine("I'm thinking of a number between 1 and 20...");
-            Console.WriteLine("Start guessing! (Q to quit)");
+            Console.WriteLine("Choose difficulty level\n1 - Easy\n2 - Medium\n3 - Hard");
+            while (!levelSelected)
+            {
+                string level = Console.ReadLine();
 
+                if (level.Equals("1"))
+                {
+                    Console.WriteLine("I'm thinking of a number between 1 and 5...");
+                    num = r.Next(5);
+                    higher = 5;
+                    levelSelected = true;
+                }
+                else if (level.Equals("2"))
+                {
+                    Console.WriteLine("I'm thinking of a number between 1 and 20...");
+                    num = r.Next(21);
+                    higher = 20;
+                    levelSelected = true;
+                }
+                else if (level.Equals("3"))
+                {
+                    Console.WriteLine("I'm thinking of a number between 1 and 50...");
+                    num = r.Next(51);
+                    higher = 50;
+                    levelSelected = true;
+                }
+                else
+                {
+                    Console.WriteLine("Please select your difficulty level");
+                }
+            }
+
+            //gameplay
+            Console.WriteLine("Start guessing! (Q to quit)");
             while (guessing)
             {
-                int guess = GetNum(out guessing);
+                int guess = GetNum(out guessing); //get number or quit game
 
                 if (guessing)
                 {
-                    if (guess < 1 || guess > 20)
+                    if (guess < lower || guess > higher)
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Out of bounds");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     else if (guess > num)
                     {
@@ -67,14 +107,20 @@ namespace Ex3GuessingGame
                     }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("!!!You win!!!");
-                        Console.WriteLine($"{name} made {attempts} guesses before winning");
+                        Console.WriteLine(attempts == 0
+                            ? "Aced it!"
+                            : $"{name} made {attempts} guesses before winning"); //special msg if guessed on first try
+                        Console.ForegroundColor = ConsoleColor.White;
                         guessing = false;
                     }
 
                     attempts++;
                 }
             }
+
+            Console.WriteLine("Thank you for playing!");
         }
     }
 }
