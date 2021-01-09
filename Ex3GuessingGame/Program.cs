@@ -8,7 +8,7 @@ namespace Ex3GuessingGame
         /// Get a number from user or quit the game
         /// </summary>
         /// <param name="playing">output param for the user to quit the game</param>
-        /// <returns></returns>
+        /// <returns>the parsed number for guess, or 0 and activated boolean flag to quit the gameplay loop</returns>
         static int GetNum(out bool playing)
         {
             int output = 0;
@@ -19,18 +19,21 @@ namespace Ex3GuessingGame
             {
                 string input = Console.ReadLine();
 
+                //allow quit
                 if (input.Equals("q") || input.Equals("Q"))
                 {
                     playing = false;
                     return output;
                 }
 
+                //if not quitting, parse the nummber
                 if (int.TryParse(input, out output))
                 {
                     playing = true;
                     return output;
                 }
 
+                //error msg
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Not an integer...");
                 Console.ForegroundColor = ConsoleColor.White;
@@ -93,6 +96,7 @@ namespace Ex3GuessingGame
                 {
                     if (guess < lower || guess > higher)
                     {
+                        //out of bounds error
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Out of bounds");
                         Console.ForegroundColor = ConsoleColor.White;
@@ -110,7 +114,7 @@ namespace Ex3GuessingGame
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("!!!You win!!!");
                         Console.WriteLine(attempts == 0
-                            ? "Aced it!"
+                            ? $"{name} aced it!!!"
                             : $"{name} made {attempts} guesses before winning"); //special msg if guessed on first try
                         Console.ForegroundColor = ConsoleColor.White;
                         guessing = false;
