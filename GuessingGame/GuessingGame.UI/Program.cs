@@ -7,7 +7,8 @@ namespace GuessingGame.UI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            GameFlow game = new GameFlow();
+            game.Play();
         }
     }
 }
