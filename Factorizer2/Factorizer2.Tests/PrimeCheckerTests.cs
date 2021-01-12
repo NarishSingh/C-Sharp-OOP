@@ -6,12 +6,6 @@ namespace Factorizer2.Tests
     [TestFixture]
     public class PrimeCheckerTests
     {
-        [SetUp]
-        public void Init()
-        {
-            
-        }
-
         [TestCase(7, true)]
         [TestCase(9, false)]
         [TestCase(11, true)]
