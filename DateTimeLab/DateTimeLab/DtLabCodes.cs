@@ -85,38 +85,14 @@ namespace DateTimeLab
 
             //first addition may be >7, need to find exact
             DayOfWeek day = d.DayOfWeek;
-            int firstAdd = 0;
-            switch (day)
-            {
-                case DayOfWeek.Sunday:
-                    firstAdd = 3;
-                    break;
-                case DayOfWeek.Monday:
-                    firstAdd = 2;
-                    break;
-                case DayOfWeek.Tuesday:
-                    firstAdd = 1;
-                    break;
-                case DayOfWeek.Wednesday:
-                    firstAdd = 0;
-                    break;
-                case DayOfWeek.Thursday:
-                    firstAdd = 6;
-                    break;
-                case DayOfWeek.Friday:
-                    firstAdd = 5;
-                    break;
-                case DayOfWeek.Saturday:
-                    firstAdd = 4;
-                    break;
-            }
+            int[] nextWed = {3, 2, 1, 0, 6, 5, 4}; //starting from sunday, you add arr[(int) DayOfWeek] to get to the next wed
 
             //build array
             for (int i = 0; i < count; i++)
             {
                 if (i == 0)
                 {
-                    d = d.AddDays(firstAdd);
+                    d = d.AddDays(nextWed[(int) day]); //enums are convertable to int's -> access arr for day's increment
                     weds[i] = d;
                 }
                 else
