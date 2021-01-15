@@ -1,0 +1,3 @@
+FirstName,LastName,Street1,Street2,City,State,Zip
+Joe,Somebody,123 Main St,,Akron,OH,44311
+Mary,Person,250 Maple Ave,Apt 305,Toledo,OH,43449
