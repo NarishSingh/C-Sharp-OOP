@@ -11,12 +11,31 @@ namespace LINQonCollections
             public int Id { get; set; }
             public string FirstName { get; set; }
             public string LastName { get; set; }
+            public string Major { get; set; }
 
-            public Student(int id, string firstName, string lastName)
+            public Student(int id, string firstName, string lastName, string major)
             {
                 Id = id;
                 FirstName = firstName;
                 LastName = lastName;
+                Major = major;
+            }
+
+            public override string ToString()
+            {
+                return string.Join(", ", Id, FirstName, LastName, Major);
+            }
+        }
+
+        public class StudentCourse
+        {
+            public int StudentId { get; set; }
+            public string CourseName { get; set; }
+
+            public StudentCourse(int studentId, string courseName)
+            {
+                StudentId = studentId;
+                CourseName = courseName;
             }
         }
 
@@ -56,26 +75,83 @@ namespace LINQonCollections
             Console.WriteLine(string.Join(", ", oddList));
 
             //cast to dict
-            List<Student> mathClass = new List<Student>
+            List<Student> students = new List<Student>
             {
-                new Student(1, "Narish", "Singh"),
-                new Student(2, "Second", "Singh"),
-                new Student(3, "Third", "Singh"),
-                new Student(4, "First", "Bhim"),
-                new Student(5, "Second", "Bhim")
+                new(1, "Narish", "Singh", "Computer Science"),
+                new(2, "Second", "Singh", "Biology"),
+                new(3, "Third", "Singh", "Chemistry"),
+                new(4, "First", "Bhim", "Biology"),
+                new(5, "Second", "Bhim", "Computer Science")
             };
 
-            Dictionary<int, Student> singhsInClass = mathClass
+            Dictionary<int, Student> singhsInClass = students
                 .Where(s => s.LastName.Equals("Singh"))
                 .ToDictionary(s => s.Id, s => s);
-            
+
             Dictionary<int, Student>.KeyCollection singhKeys = singhsInClass.Keys;
             foreach (int key in singhKeys)
             {
                 Console.WriteLine(singhsInClass[key].FirstName);
             }
-            
+
             /*declarative query operations*/
+            List<StudentCourse> courses = new List<StudentCourse>
+            {
+                new(1, "C# 101"),
+                new(1, ".ASP 102"),
+                new(1, "Java 101"),
+                new(1, "CSS 101")
+            };
+
+            //joins return neither type, but an anon type, need a select clause to specify the return obj
+            var joinQuery = from s in students
+                join c in courses
+                    on s.Id equals c.StudentId
+                select new
+                {
+                    StudentID = s.Id,
+                    LastName = s.LastName,
+                    CourseName = c.CourseName
+                };
+            foreach (var sc in joinQuery)
+            {
+                Console.WriteLine(sc.ToString());
+            }
+
+            Console.WriteLine();
+
+            //where and ordering
+            var singhQuery = from s in students
+                join c in courses
+                    on s.Id equals c.StudentId
+                where s.LastName == "Singh"
+                orderby c.CourseName descending
+                select new
+                {
+                    StudentID = s.Id,
+                    LastName = s.LastName,
+                    CourseName = c.CourseName
+                };
+            foreach (var singh in singhQuery)
+            {
+                Console.WriteLine(singh);
+            }
+
+            Console.WriteLine();
+
+            //grouping
+            var groupMajor = from s in students
+                orderby s.Major, s.LastName
+                group s by s.Major;
+            foreach (var sm in groupMajor)
+            {
+                Console.WriteLine(sm.Key);
+
+                foreach (Student student in sm)
+                {
+                    Console.WriteLine(student.ToString());
+                }
+            }
         }
     }
 }
