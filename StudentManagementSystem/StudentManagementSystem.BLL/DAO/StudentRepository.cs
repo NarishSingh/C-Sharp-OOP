@@ -22,9 +22,7 @@ namespace StudentManagementSystem.BLL.DAO
         {
             using (StreamWriter w = new StreamWriter(_path, true))
             {
-                string line = $"{s.FirstName},{s.LastName},{s.Major},{s.GPA}";
-
-                w.WriteLine(line);
+                w.WriteLine(FormatRecord(s));
             }
         }
 
@@ -38,7 +36,7 @@ namespace StudentManagementSystem.BLL.DAO
 
             using (StreamReader sr = new StreamReader(_path))
             {
-                // sr.ReadLine(); //skip header row
+                sr.ReadLine(); //skip header row
                 string line;
 
                 while ((line = sr.ReadLine()) != null)
@@ -60,14 +58,59 @@ namespace StudentManagementSystem.BLL.DAO
             return students;
         }
 
+        /// <summary>
+        /// Update a student record
+        /// </summary>
+        /// <param name="s">Updated Student obj</param>
+        /// <param name="idx">index of the student update</param>
         public void UpdateStudent(Student s, int idx)
         {
-            throw new NotImplementedException();
+            List<Student> students = ReadAllStudents();
+            students[idx] = s; //just replace the elem in array
+            PersistFile(students);
         }
 
-        public bool DeleteStudent(int idx)
+        /// <summary>
+        /// Delete a student record
+        /// </summary>
+        /// <param name="idx">index of the deletion</param>
+        public void DeleteStudent(int idx)
         {
-            throw new NotImplementedException();
+            List<Student> students = ReadAllStudents();
+            students.RemoveAt(idx);
+            PersistFile(students);
+        }
+
+        /*HELPERS*/
+        /// <summary>
+        /// Format the student record CSV style
+        /// </summary>
+        /// <param name="s">well formed Student obj</param>
+        /// <returns>Comma delimted string representation of Student for persistence</returns>
+        private string FormatRecord(Student s)
+        {
+            return $"{s.FirstName},{s.LastName},{s.Major},{s.GPA}";
+        }
+
+        /// <summary>
+        /// Write the student list to file
+        /// </summary>
+        /// <param name="students">List of all students</param>
+        private void PersistFile(List<Student> students)
+        {
+            if (File.Exists(_path))
+            {
+                File.Delete(_path);
+            }
+
+            using (StreamWriter w = new StreamWriter(_path))
+            {
+                w.WriteLine("FirstName,LastName,Major,GPA");
+                foreach (Student s in students)
+                {
+                    w.WriteLine(FormatRecord(s));
+                }
+            }
         }
     }
 }

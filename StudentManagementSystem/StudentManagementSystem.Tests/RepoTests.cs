@@ -18,6 +18,15 @@ namespace StudentManagementSystem.Tests
         public void Setup()
         {
             repo = new StudentRepository(TestPath);
+
+            //scrub file, add header
+            FileStream testFile = File.Create(TestPath);
+            testFile.Close(); //have to close FileStream before StreamWriter can open
+            using (StreamWriter w = new StreamWriter(TestPath))
+            {
+                w.WriteLine("FirstName,LastName,Major,GPA");
+            }
+            
             student1 = new Student
             {
                 FirstName = "Testing",
@@ -25,6 +34,7 @@ namespace StudentManagementSystem.Tests
                 Major = "Unit Testing",
                 GPA = 1.0M
             };
+            
             student2 = new Student
             {
                 FirstName = "Testing2",
@@ -32,13 +42,6 @@ namespace StudentManagementSystem.Tests
                 Major = "Unit Testing",
                 GPA = 2.0M
             };
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            FileStream testFile = File.Create(TestPath); //scrub file for new test
-            testFile.Close();
         }
         
         [Test]
@@ -75,6 +78,52 @@ namespace StudentManagementSystem.Tests
             Assert.AreEqual(student2.LastName, s2.LastName);
             Assert.AreEqual(student2.Major, s2.Major);
             Assert.AreEqual(student2.GPA, s2.GPA);
+        }
+
+        [Test]
+        public void UpdateStudentTest()
+        {
+            repo.CreateStudent(student1);
+            repo.CreateStudent(student2);
+            List<Student> original = repo.ReadAllStudents();
+
+            Student update = new Student
+            {
+                FirstName = "update",
+                LastName = student1.LastName,
+                Major = student1.Major,
+                GPA = student1.GPA
+            };
+            repo.UpdateStudent(update, original.IndexOf(student1));
+            List<Student> afterUpdate = repo.ReadAllStudents();
+            
+            Assert.AreEqual(2, original.Count);
+            Assert.IsTrue(original.Contains(student1));
+            Assert.IsFalse(original.Contains(update));
+            Assert.IsTrue(original.Contains(student2));
+            Assert.AreNotEqual(original, afterUpdate);
+            Assert.IsFalse(afterUpdate.Contains(student1));
+            Assert.IsTrue(afterUpdate.Contains(update));
+            Assert.IsTrue(afterUpdate.Contains(student2));
+        }
+
+        [Test]
+        public void DeleteStudentTest()
+        {
+            repo.CreateStudent(student1);
+            repo.CreateStudent(student2);
+            List<Student> original = repo.ReadAllStudents();
+            
+            repo.DeleteStudent(1);
+            List<Student> afterDel = repo.ReadAllStudents();
+            
+            Assert.AreEqual(2, original.Count);
+            Assert.IsTrue(original.Contains(student1));
+            Assert.IsTrue(original.Contains(student2));
+            Assert.AreNotEqual(original, afterDel);
+            Assert.AreEqual(1, afterDel.Count);
+            Assert.IsTrue(afterDel.Contains(student1));
+            Assert.IsFalse(afterDel.Contains(student2));
         }
     }
 }
