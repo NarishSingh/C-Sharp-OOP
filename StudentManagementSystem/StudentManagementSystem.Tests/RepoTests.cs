@@ -9,7 +9,7 @@ namespace StudentManagementSystem.Tests
     [TestFixture]
     public class RepoTests
     {
-        private const string TestPath = @"C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\StudentManagementSystem\AppData\StudentsTest.txt";
+        private const string TestPath = @"C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\StudentManagementSystem\StudentManagementSystem.UI\bin\Debug\net5.0\AppData\StudentsTest.txt";
         private StudentRepository repo;
         private Student student1;
         private Student student2;
@@ -22,10 +22,6 @@ namespace StudentManagementSystem.Tests
             //scrub file, add header
             FileStream testFile = File.Create(TestPath);
             testFile.Close(); //have to close FileStream before StreamWriter can open
-            using (StreamWriter w = new StreamWriter(TestPath))
-            {
-                w.WriteLine("FirstName,LastName,Major,GPA");
-            }
             
             student1 = new Student
             {

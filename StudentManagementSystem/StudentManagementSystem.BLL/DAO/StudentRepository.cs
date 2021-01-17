@@ -9,6 +9,11 @@ namespace StudentManagementSystem.BLL.DAO
     {
         private string _path;
 
+        public StudentRepository()
+        {
+            _path = @"C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\StudentManagementSystem\StudentManagementSystem.UI\bin\Debug\net5.0\AppData\Students.txt";
+        }
+
         public StudentRepository(string path)
         {
             this._path = path;
@@ -36,7 +41,6 @@ namespace StudentManagementSystem.BLL.DAO
 
             using (StreamReader sr = new StreamReader(_path))
             {
-                sr.ReadLine(); //skip header row
                 string line;
 
                 while ((line = sr.ReadLine()) != null)
@@ -105,7 +109,6 @@ namespace StudentManagementSystem.BLL.DAO
 
             using (StreamWriter w = new StreamWriter(_path))
             {
-                w.WriteLine("FirstName,LastName,Major,GPA");
                 foreach (Student s in students)
                 {
                     w.WriteLine(FormatRecord(s));

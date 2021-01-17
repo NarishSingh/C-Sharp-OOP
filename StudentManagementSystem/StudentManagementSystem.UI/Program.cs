@@ -1,4 +1,7 @@
 ﻿using System;
+using StudentManagementSystem.BLL.DAO;
+using StudentManagementSystem.UI.Controller;
+using StudentManagementSystem.UI.View;
 
 namespace StudentManagementSystem.UI
 {
@@ -6,7 +9,9 @@ namespace StudentManagementSystem.UI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            SMSController c = new SMSController(new StudentRepository(), new SMSView());
+
+            c.Run();
         }
     }
 }
