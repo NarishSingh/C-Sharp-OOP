@@ -54,12 +54,19 @@ namespace StudentManagementSystem.UI.View
         }
 
         /*LIST STUDENTS*/
+        /// <summary>
+        /// Display opening List banner
+        /// </summary>
         public void DisplayListBanner()
         {
             Console.WriteLine("Student List");
             Console.WriteLine(Bar);
         }
 
+        /// <summary>
+        /// List students from memory
+        /// </summary>
+        /// <param name="students">List of students to display</param>
         public void ListAllStudents(List<Student> students)
         {
             DisplayStudentListHeader();
@@ -71,6 +78,9 @@ namespace StudentManagementSystem.UI.View
             ViewConfirm();
         }
 
+        /// <summary>
+        /// Message for no students to list
+        /// </summary>
         public void ListEmpty()
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -81,12 +91,19 @@ namespace StudentManagementSystem.UI.View
         }
 
         /*ADD STUDENT*/
+        /// <summary>
+        /// Display opening add student banner
+        /// </summary>
         public void DisplayAddStudentBanner()
         {
             Console.WriteLine("Add Student");
             Console.WriteLine(Bar);
         }
 
+        /// <summary>
+        /// Validate a new Student obj for add
+        /// </summary>
+        /// <returns>Well formed Student obj</returns>
         public Student NewStudent()
         {
             Console.Clear();
@@ -108,6 +125,11 @@ namespace StudentManagementSystem.UI.View
             };
         }
 
+        /// <summary>
+        /// Prompt user to confirm student addition
+        /// </summary>
+        /// <param name="s">Student to confirm</param>
+        /// <returns>True to confirm addition, false to discard</returns>
         public bool AddConfirmation(Student s)
         {
             DisplayStudentListHeader();
@@ -117,6 +139,9 @@ namespace StudentManagementSystem.UI.View
             return GetUserConfirmation("Add Student?");
         }
 
+        /// <summary>
+        /// Success banner for Student add
+        /// </summary>
         public void StudentAddedSuccess()
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -125,6 +150,9 @@ namespace StudentManagementSystem.UI.View
             ViewConfirm();
         }
 
+        /// <summary>
+        /// Cancellation banner for Student add
+        /// </summary>
         public void StudentAddCanceled()
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -132,8 +160,11 @@ namespace StudentManagementSystem.UI.View
             Console.ForegroundColor = ConsoleColor.Gray;
             ViewConfirm();
         }
-        
+
         /*EXIT MESSAGE*/
+        /// <summary>
+        /// Exit banner for app quit
+        /// </summary>
         public void DisplayExitMsg()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -142,6 +173,9 @@ namespace StudentManagementSystem.UI.View
         }
 
         /*HELPERS*/
+        /// <summary>
+        /// Display closing banner and prompt for any view
+        /// </summary>
         private static void ViewConfirm()
         {
             Console.WriteLine();
@@ -151,12 +185,20 @@ namespace StudentManagementSystem.UI.View
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// Display header for student info display
+        /// </summary>
         private static void DisplayStudentListHeader()
         {
             Console.WriteLine(StudentLineFormat, "Name", "Major", "GPA");
             Console.WriteLine(Bar);
         }
 
+        /// <summary>
+        /// Read and validate string input
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format</param>
+        /// <returns>the validated string</returns>
         private static string GetRequiredString(string prompt)
         {
             while (true)
@@ -177,6 +219,11 @@ namespace StudentManagementSystem.UI.View
             }
         }
 
+        /// <summary>
+        /// Read and validate a decimal input
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format</param>
+        /// <returns>validated decimal</returns>
         private static decimal GetRequiredDecimal(string prompt)
         {
             decimal output;
@@ -207,6 +254,11 @@ namespace StudentManagementSystem.UI.View
             }
         }
 
+        /// <summary>
+        /// Read and validate user confirmation or cancellation
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format</param>
+        /// <returns>True if confirmed, false to cancel action</returns>
         private bool GetUserConfirmation(string prompt)
         {
             while (true)

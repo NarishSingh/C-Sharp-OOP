@@ -17,9 +17,9 @@ namespace StudentManagementSystem.UI.Controller
             this.view = view;
         }
 
-        /**
-         * App's run loop
-         */
+        /// <summary>
+        /// App's run loop
+        /// </summary>
         public void Run()
         {
             bool running = true;
@@ -55,6 +55,10 @@ namespace StudentManagementSystem.UI.Controller
             ExitMsg();
         }
 
+        /// <summary>
+        /// Get user menu selection
+        /// </summary>
+        /// <returns>int 0-4</returns>
         private int GetMenuSelection()
         {
             return view.GetMenuChoice();
@@ -79,6 +83,9 @@ namespace StudentManagementSystem.UI.Controller
             }
         }
 
+        /// <summary>
+        /// Create a new student and persist to file if confirmed
+        /// </summary>
         private void AddStudent()
         {
             Console.Clear();
@@ -94,7 +101,7 @@ namespace StudentManagementSystem.UI.Controller
                 view.StudentAddCanceled();
             }
         }
-
+        
         private void RemoveStudent()
         {
             throw new System.NotImplementedException();
