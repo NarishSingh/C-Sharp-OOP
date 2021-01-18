@@ -13,7 +13,7 @@ namespace DvdLibrary.BLL.DAO
 
         public LibraryDaoImpl()
         {
-            _path = "library.txt";
+            _path = @"C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\DvdLibrary\AppData\library.txt";
         }
 
         public LibraryDaoImpl(string path)
@@ -22,31 +22,32 @@ namespace DvdLibrary.BLL.DAO
         }
 
 
-        public void CreateDvd(DVD dvd)
+        public DVD CreateDvd(DVD dvd)
         {
             LoadLibrary();
             _library.Add(dvd.Id, dvd);
             WriteLibrary();
+
+            return _library.ContainsValue(dvd) ? dvd : null;
         }
 
         public DVD ReadDvdById(int id)
         {
             LoadLibrary();
-            return _library[id];
+            try
+            {
+                return _library[id];
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new LibraryDaoException(e.Message, e);
+            }
         }
 
         public DVD ReadDvdByTitle(string title)
         {
             LoadLibrary();
-            foreach (DVD dvd in _library.Values)
-            {
-                if (dvd.Title.Equals(title))
-                {
-                    return dvd;
-                }
-            }
-
-            return null;
+            return _library.Values.FirstOrDefault(dvd => dvd.Title.Equals(title));
         }
 
         public List<DVD> ReadAll()
@@ -55,16 +56,54 @@ namespace DvdLibrary.BLL.DAO
             return _library.Values.ToList();
         }
 
-        public void UpdateDvd(DVD update)
+        public List<DVD> ReadAllByDirector(string director)
+        {
+            LoadLibrary();
+            return _library.Where(kv => kv.Value.Director.Equals(director))
+                .Select(kv => kv.Value)
+                .ToList();
+        }
+
+        public List<DVD> ReadAllByStudio(string studio)
+        {
+            LoadLibrary();
+            return _library.Where(kv => kv.Value.Studio.Equals(studio))
+                .Select(kv => kv.Value)
+                .ToList();
+        }
+
+        public List<DVD> ReadAllByReleaseYear(DateTime release)
+        {
+            LoadLibrary();
+            return _library.Where(kv => kv.Value.ReleaseDate.Year == release.Year)
+                .Select(kv => kv.Value)
+                .ToList();
+        }
+
+        public List<DVD> ReadAllByMpaaRating(string mpaaRating)
+        {
+            LoadLibrary();
+            return _library.Where(kv => kv.Value.MpaaRating == mpaaRating)
+                .Select(kv => kv.Value)
+                .ToList();
+        }
+
+        public DVD UpdateDvd(DVD update)
         {
             LoadLibrary();
             _library[update.Id] = update;
+            WriteLibrary();
+
+            return _library.ContainsValue(update) ? update : null;
         }
 
         public bool DeleteDvd(int id)
         {
             LoadLibrary();
-            return _library.Remove(id);
+            bool removed = _library.Remove(id);
+            WriteLibrary();
+
+            return removed;
         }
 
         /*DATA (UN)MARSHALLING*/
@@ -85,6 +124,8 @@ namespace DvdLibrary.BLL.DAO
         /// </summary>
         private void LoadLibrary()
         {
+            _library.Clear();
+
             try
             {
                 using (StreamReader sr = new StreamReader(_path))
@@ -122,11 +163,18 @@ namespace DvdLibrary.BLL.DAO
         /// <exception cref="LibraryDaoException">If unable to persist to file</exception>
         private void WriteLibrary()
         {
+            //scrub file
+            if (File.Exists(_path))
+            {
+                File.Delete(_path);
+            }
+
             List<DVD> dvds = _library.Values.ToList();
 
             try
             {
-                File.Create(_path);
+                var file = File.Create(_path);
+                file.Close();
 
                 using (StreamWriter w = new StreamWriter(_path))
                 {
