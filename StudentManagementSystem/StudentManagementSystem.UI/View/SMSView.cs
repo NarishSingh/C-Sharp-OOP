@@ -231,6 +231,88 @@ namespace StudentManagementSystem.UI.View
             ViewConfirm();
         }
 
+        /*EDIT STUDENT*/
+        /// <summary>
+        /// Display opening edit student banner
+        /// </summary>
+        public void DisplayEditStudentBanner()
+        {
+            Console.WriteLine("Edit Student Record");
+            DisplayOffsetStudentListHeader();
+        }
+
+        /// <summary>
+        /// Read and validate index of student to edit
+        /// </summary>
+        /// <param name="max">int corresponding to the max index of all students</param>
+        /// <returns>int index of the student to edit</returns>
+        public int ChooseStudentForUpdate(int max)
+        {
+            return GetRequiredIndex("Enter number of student to edit: ", max);
+        }
+
+        /// <summary>
+        /// Get edits for a student
+        /// </summary>
+        /// <param name="s">Student to be edited</param>
+        /// <returns>Updated Student obj</returns>
+        public Student EditStudent(Student s)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("-Press ENTER on any field to retain original value-");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            string firstName = GetUpdateString("First Name: ", s.FirstName);
+            string lastName = GetUpdateString("Last Name: ", s.LastName);
+            string major = GetUpdateString("Major: ", s.Major);
+            decimal gpa = GetUpdateDecimal("GPA: ", s.GPA);
+
+            return new Student
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Major = major,
+                GPA = gpa
+            };
+        }
+
+        /// <summary>
+        /// Confirm a student edit
+        /// </summary>
+        /// <param name="edited">edited Student obj</param>
+        /// <returns>True if confirmed, false otherwise</returns>
+        public bool EditConfirmation(Student edited)
+        {
+            Console.WriteLine();
+            DisplayStudentListHeader();
+            Console.WriteLine(StudentLineFormat, edited.LastName + ", " + edited.FirstName, edited.Major, edited.GPA);
+            Console.WriteLine();
+
+            return GetUserConfirmation("Edit Student?");
+        }
+
+        /// <summary>
+        /// Display success message for edit
+        /// </summary>
+        public void EditStudentSuccess()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Student successfully edited.");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
+        /// <summary>
+        /// Display cancel message for edit
+        /// </summary>
+        public void EditStudentCanceled()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Edit canceled");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
         /*EXIT MESSAGE*/
         /// <summary>
         /// Exit banner for app quit
@@ -293,7 +375,7 @@ namespace StudentManagementSystem.UI.View
                 }
                 else
                 {
-                    return input;
+                    return input.Trim();
                 }
             }
         }
@@ -355,7 +437,7 @@ namespace StudentManagementSystem.UI.View
                 }
                 else
                 {
-                    //validate that GPA is 0.0 - 4.0
+                    //validate that index is 1-list index maximum
                     if (output < 1 || output > maxIdx)
                     {
                         Console.WriteLine("Please choose an existing student");
@@ -403,6 +485,70 @@ namespace StudentManagementSystem.UI.View
                         Console.WriteLine("Press any key to continue. . .");
                         Console.ReadKey();
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read an updated string value, or leave as is
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format</param>
+        /// <param name="original">original string value for the field</param>
+        /// <returns>string with the (un)edited information for field</returns>
+        private string GetUpdateString(string prompt, string original)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    return original;
+                }
+                else
+                {
+                    return input.Trim();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read an updated decimal value, or leave as is
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format<</param>
+        /// <param name="original">original decimal value for the field</param>
+        /// <returns>decimal with the (un)edited information for field</returns>
+        private decimal GetUpdateDecimal(string prompt, decimal original)
+        {
+            decimal output;
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    return original;
+                }
+                else if (!decimal.TryParse(input, out output))
+                {
+                    Console.WriteLine("Please enter a valid GPA");
+                    Console.WriteLine("Press any key to continue. . .");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    //validate that GPA is 0.0 - 4.0
+                    if (output < 0 || output > 4)
+                    {
+                        Console.WriteLine("GPA must be between 0.0 and 4.0.");
+                        Console.WriteLine("Press any key to continue. . .");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    return output;
                 }
             }
         }

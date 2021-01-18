@@ -23,9 +23,8 @@ namespace StudentManagementSystem.UI.Controller
         public void Run()
         {
             bool running = true;
-            int menuSelection = 0;
-
-            //TODO implement exceptions
+            int menuSelection;
+            
             while (running)
             {
                 Console.Clear();
@@ -71,7 +70,7 @@ namespace StudentManagementSystem.UI.Controller
         {
             Console.Clear();
             view.DisplayListBanner();
-            
+
             List<Student> students = dao.ReadAllStudents();
             if (students.Count == 0)
             {
@@ -90,7 +89,7 @@ namespace StudentManagementSystem.UI.Controller
         {
             Console.Clear();
             view.DisplayAddStudentBanner();
-            
+
             Student newStudent = view.NewStudent();
             if (view.AddConfirmation(newStudent))
             {
@@ -102,7 +101,10 @@ namespace StudentManagementSystem.UI.Controller
                 view.StudentAddCanceled();
             }
         }
-        
+
+        /// <summary>
+        /// Remove a student and persist changes if confirmed
+        /// </summary>
         private void RemoveStudent()
         {
             Console.Clear();
@@ -124,11 +126,34 @@ namespace StudentManagementSystem.UI.Controller
             }
         }
 
+        /// <summary>
+        /// Edit a student and persist changes if confirmed
+        /// </summary>
         private void EditStudent()
         {
-            throw new System.NotImplementedException();
+            Console.Clear();
+            view.DisplayEditStudentBanner();
+
+            List<Student> students = dao.ReadAllStudents();
+            view.DisplayIndexedStudentList(students);
+            int i = view.ChooseStudentForUpdate(students.Count);
+            i--;
+
+            Student edit = view.EditStudent(students[i]);
+            if (view.EditConfirmation(edit))
+            {
+                dao.UpdateStudent(edit, i);
+                view.EditStudentSuccess();
+            }
+            else
+            {
+                view.EditStudentCanceled();
+            }
         }
 
+        /// <summary>
+        /// Display exit banner for app
+        /// </summary>
         private void ExitMsg()
         {
             view.DisplayExitMsg();
