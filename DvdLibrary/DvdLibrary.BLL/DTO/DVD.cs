@@ -22,7 +22,8 @@ namespace DvdLibrary.BLL.DTO
             Title = title;
         }
 
-        public DVD(string title, DateTime releaseDate, string director, string studio, string mpaaRating, string userRating)
+        public DVD(string title, DateTime releaseDate, string director, string studio, string mpaaRating,
+            string userRating)
         {
             Title = title;
             ReleaseDate = releaseDate;
