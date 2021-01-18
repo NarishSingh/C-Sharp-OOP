@@ -8,6 +8,7 @@ namespace StudentManagementSystem.UI.View
     {
         public static string Bar = "===============================================";
         public static string StudentLineFormat = "{0, -20} {1, -20} {2, 5}";
+        public static string IndexedLineFormat = "{0, -2} {1, -20} {2, -20} {3, 5}";
 
         /*MAIN MENU*/
         /// <summary>
@@ -132,9 +133,10 @@ namespace StudentManagementSystem.UI.View
         /// <returns>True to confirm addition, false to discard</returns>
         public bool AddConfirmation(Student s)
         {
-            DisplayStudentListHeader();
             Console.WriteLine();
+            DisplayStudentListHeader();
             Console.WriteLine(StudentLineFormat, s.LastName + ", " + s.FirstName, s.Major, s.GPA);
+            Console.WriteLine();
 
             return GetUserConfirmation("Add Student?");
         }
@@ -157,6 +159,74 @@ namespace StudentManagementSystem.UI.View
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("Add canceled");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
+        /*REMOVE STUDENT*/
+        /// <summary>
+        /// Display opening remove student banner
+        /// </summary>
+        public void DisplayRemoveStudentBanner()
+        {
+            Console.WriteLine("Remove Student");
+            DisplayOffsetStudentListHeader();
+        }
+
+        /// <summary>
+        /// Display an indexed list of students
+        /// </summary>
+        /// <param name="students">list of Students</param>
+        public void DisplayIndexedStudentList(List<Student> students)
+        {
+            for (int i = 0; i < students.Count; i++)
+            {
+                Console.WriteLine(IndexedLineFormat, i + 1, students[i].LastName + ", " + students[i].FirstName,
+                    students[i].Major, students[i].GPA);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine(Bar + "===");
+        }
+
+        /// <summary>
+        /// Read and validate a student selection for removal
+        /// </summary>
+        /// <param name="max">int for the maximum index to choose from</param>
+        /// <returns>int for the Student to be removed</returns>
+        public int ChooseStudentForRemoval(int max)
+        {
+            return GetRequiredIndex("Enter number of student to remove: ", max);
+        }
+
+        /// <summary>
+        /// Confirm removal of student
+        /// </summary>
+        /// <param name="s">Student to be removed</param>
+        /// <returns>True if confirmed, false if cancelled</returns>
+        public bool RemoveConfirmation(Student s)
+        {
+            return GetUserConfirmation($"Remove {s.FirstName} {s.LastName}?");
+        }
+
+        /// <summary>
+        /// Display success banner for student removal
+        /// </summary>
+        public void StudentRemovedSuccess()
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Student successfully removed.");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
+        /// <summary>
+        /// Display cancel banner for student removal
+        /// </summary>
+        public void StudentRemoveCancelled()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Remove canceled");
             Console.ForegroundColor = ConsoleColor.Gray;
             ViewConfirm();
         }
@@ -192,6 +262,15 @@ namespace StudentManagementSystem.UI.View
         {
             Console.WriteLine(StudentLineFormat, "Name", "Major", "GPA");
             Console.WriteLine(Bar);
+        }
+
+        /// <summary>
+        /// Display header for student info display
+        /// </summary>
+        private static void DisplayOffsetStudentListHeader()
+        {
+            Console.WriteLine(IndexedLineFormat, "", "Name", "Major", "GPA");
+            Console.WriteLine("   " + Bar);
         }
 
         /// <summary>
@@ -244,6 +323,42 @@ namespace StudentManagementSystem.UI.View
                     if (output < 0 || output > 4)
                     {
                         Console.WriteLine("GPA must be between 0.0 and 4.0.");
+                        Console.WriteLine("Press any key to continue. . .");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    return output;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read and validate an index number from user
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format</param>
+        /// <param name="maxIdx">int corresponding to the max index of student list</param>
+        /// <returns>int corresponding to the student to be selected</returns>
+        private static int GetRequiredIndex(string prompt, int maxIdx)
+        {
+            int output;
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (!int.TryParse(input, out output))
+                {
+                    Console.WriteLine("Please enter a valid index for an active student");
+                    Console.WriteLine("Press any key to continue. . .");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    //validate that GPA is 0.0 - 4.0
+                    if (output < 1 || output > maxIdx)
+                    {
+                        Console.WriteLine("Please choose an existing student");
                         Console.WriteLine("Press any key to continue. . .");
                         Console.ReadKey();
                         continue;

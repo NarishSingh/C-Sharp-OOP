@@ -90,6 +90,7 @@ namespace StudentManagementSystem.UI.Controller
         {
             Console.Clear();
             view.DisplayAddStudentBanner();
+            
             Student newStudent = view.NewStudent();
             if (view.AddConfirmation(newStudent))
             {
@@ -104,7 +105,23 @@ namespace StudentManagementSystem.UI.Controller
         
         private void RemoveStudent()
         {
-            throw new System.NotImplementedException();
+            Console.Clear();
+            view.DisplayRemoveStudentBanner();
+
+            List<Student> students = dao.ReadAllStudents();
+            view.DisplayIndexedStudentList(students);
+            int i = view.ChooseStudentForRemoval(students.Count);
+            i--; //dao will index from 0 not 1
+
+            if (view.RemoveConfirmation(students[i]))
+            {
+                dao.DeleteStudent(i);
+                view.StudentRemovedSuccess();
+            }
+            else
+            {
+                view.StudentRemoveCancelled();
+            }
         }
 
         private void EditStudent()
