@@ -75,6 +75,22 @@ namespace DvdLibraryTests
         }
 
         [Test]
+        public void CreateNullIdFail()
+        {
+            DVD bad = new DVD();
+
+            try
+            {
+                DVD failed = dao.CreateDvd(bad);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
         public void ReadByIdFail()
         {
             DVD d1 = dao.CreateDvd(dvd1);
@@ -208,10 +224,41 @@ namespace DvdLibraryTests
             List<DVD> afterDel = dao.ReadAll();
 
             Assert.AreEqual(3, original.Count);
+            Assert.IsTrue(deleted);
             Assert.AreNotEqual(original, afterDel);
             Assert.IsFalse(afterDel.Contains(d1));
             Assert.IsTrue(afterDel.Contains(d2));
             Assert.IsTrue(afterDel.Contains(d3));
+        }
+
+        [Test]
+        public void DeleteNullIdFail()
+        {
+            DVD bad = new DVD();
+            try
+            {
+                bool delFail = dao.DeleteDvd(bad.Id);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void DeleteBadIdFail()
+        {
+            DVD d1 = dao.CreateDvd(dvd1);
+            try
+            {
+                bool delFail = dao.DeleteDvd(dvd2.Id);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+                Assert.Pass();
+            }
         }
     }
 }

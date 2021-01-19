@@ -25,6 +25,12 @@ namespace DvdLibrary.BLL.DAO
         public DVD CreateDvd(DVD dvd)
         {
             LoadLibrary();
+
+            if (dvd.Id == null || _library.ContainsKey(dvd.Id))
+            {
+                throw new LibraryDaoException("Invalid Key");
+            }
+
             _library.Add(dvd.Id, dvd);
             WriteLibrary();
 
@@ -47,6 +53,7 @@ namespace DvdLibrary.BLL.DAO
         public DVD ReadDvdByTitle(string title)
         {
             LoadLibrary();
+            //TODO can be checked with isNullOrEmpty in service
             return _library.Values.FirstOrDefault(dvd => dvd.Title.Equals(title));
         }
 
@@ -100,6 +107,12 @@ namespace DvdLibrary.BLL.DAO
         public bool DeleteDvd(int id)
         {
             LoadLibrary();
+
+            if (id == null || !_library.ContainsKey(id))
+            {
+                throw new LibraryDaoException("Invalid Key");
+            }
+
             bool removed = _library.Remove(id);
             WriteLibrary();
 
