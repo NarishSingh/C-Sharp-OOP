@@ -105,7 +105,14 @@ namespace DvdLibrary.BLL.DAO
         public DVD UpdateDvd(DVD update)
         {
             LoadLibrary();
-            _library[update.Id] = update;
+            try
+            {
+                _library[update.Id] = update;
+            }
+            catch (KeyNotFoundException e)
+            {
+                throw new LibraryDaoException("Cannot update non-existent record");
+            }
             WriteLibrary();
 
             return _library.ContainsValue(update) ? update : null;

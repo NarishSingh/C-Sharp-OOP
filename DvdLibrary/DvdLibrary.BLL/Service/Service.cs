@@ -22,6 +22,7 @@ namespace DvdLibrary.BLL.Service
                 return new DVD
                 {
                     Id = _dao.ReadAll().Count, //count is always last i +1
+                    //rest are validated by view
                     Title = dvdRequest.Title,
                     ReleaseDate = dvdRequest.ReleaseDate,
                     Director = dvdRequest.Director,
@@ -152,12 +153,26 @@ namespace DvdLibrary.BLL.Service
 
         public DVD UpdateDvd(DVD update)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _dao.UpdateDvd(update);
+            }
+            catch (LibraryDaoException e)
+            {
+                throw new PersistenceFailedException(e.Message, e);
+            }
         }
 
         public bool DeleteDvd(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _dao.DeleteDvd(id);
+            }
+            catch (LibraryDaoException e)
+            {
+                throw new PersistenceFailedException(e.Message, e);
+            }
         }
     }
 }
