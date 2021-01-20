@@ -27,7 +27,7 @@ namespace DvdLibraryTests
             var file = File.Create(TestPath);
             file.Close();
 
-            //dvd's
+            //dvds
             dvd1 = new DVD
             {
                 Id = 1,
@@ -63,7 +63,7 @@ namespace DvdLibraryTests
         }
 
         [Test]
-        public void CreateReadByIdDVDTest()
+        public void CreateReadByIdDvdTest()
         {
             DVD d1 = dao.CreateDvd(dvd1);
             DVD fromDao = dao.ReadDvdById(d1.Id);
@@ -82,22 +82,6 @@ namespace DvdLibraryTests
             try
             {
                 DVD failed = dao.CreateDvd(bad);
-                Assert.Fail();
-            }
-            catch (Exception e)
-            {
-                Assert.Pass();
-            }
-        }
-
-        [Test]
-        public void ReadByIdFail()
-        {
-            DVD d1 = dao.CreateDvd(dvd1);
-
-            try
-            {
-                DVD fail = dao.ReadDvdById(dvd2.Id);
                 Assert.Fail();
             }
             catch (LibraryDaoException e)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DvdLibrary.BLL.DAO;
 using DvdLibrary.BLL.DTO;
 
@@ -14,6 +15,11 @@ namespace DvdLibrary.BLL.Service
             _dao = new LibraryDaoImpl();
         }
 
+        public Service(ILibraryDao dao)
+        {
+            _dao = dao; //testing only
+        }
+
         public DVD ValidateDvd(DVD dvdRequest)
         {
             //generate id or pull original id
@@ -21,7 +27,9 @@ namespace DvdLibrary.BLL.Service
             {
                 return new DVD
                 {
-                    Id = _dao.ReadAll().Count, //count is always last i +1
+                    Id = _dao.ReadAll().Count == 0
+                        ? 1
+                        : NewId(),
                     //rest are validated by view
                     Title = dvdRequest.Title,
                     ReleaseDate = dvdRequest.ReleaseDate,
@@ -33,6 +41,13 @@ namespace DvdLibrary.BLL.Service
             }
 
             return dvdRequest;
+        }
+
+        private int NewId()
+        {
+            return _dao.ReadAll()
+                .Select(d => d.Id)
+                .Max() + 1;
         }
 
         public DVD CreateDvd(DVD dvd)

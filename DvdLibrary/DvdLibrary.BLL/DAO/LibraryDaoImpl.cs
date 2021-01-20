@@ -26,7 +26,7 @@ namespace DvdLibrary.BLL.DAO
         {
             LoadLibrary();
 
-            if (dvd.Id == null || _library.ContainsKey(dvd.Id))
+            if (dvd.Id == 0 || _library.ContainsKey(dvd.Id))
             {
                 throw new LibraryDaoException("Invalid Key");
             }
@@ -52,7 +52,8 @@ namespace DvdLibrary.BLL.DAO
                 throw new LibraryDaoException("Title must not be blank");
             }
 
-            DVD dvd = _library.Values.FirstOrDefault(dvd => dvd.Title.Equals(title));
+            DVD? dvd = _library.Values
+                .FirstOrDefault(d => d.Title.Equals(title));
 
             if (dvd != null)
             {
@@ -122,7 +123,7 @@ namespace DvdLibrary.BLL.DAO
         {
             LoadLibrary();
 
-            if (id == null || !_library.ContainsKey(id))
+            if (id == 0 || !_library.ContainsKey(id))
             {
                 throw new LibraryDaoException("Invalid Key");
             }
@@ -203,7 +204,7 @@ namespace DvdLibrary.BLL.DAO
                 var file = File.Create(_path);
                 file.Close();
 
-                using (StreamWriter w = new StreamWriter(_path))
+                using (StreamWriter w = new(_path))
                 {
                     foreach (DVD d in dvds)
                     {
