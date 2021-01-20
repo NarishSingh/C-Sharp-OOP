@@ -40,21 +40,28 @@ namespace DvdLibrary.BLL.DAO
         public DVD ReadDvdById(int id)
         {
             LoadLibrary();
-            try
-            {
-                return _library[id];
-            }
-            catch (KeyNotFoundException e)
-            {
-                throw new LibraryDaoException(e.Message, e);
-            }
+            return _library[id];
         }
 
         public DVD ReadDvdByTitle(string title)
         {
             LoadLibrary();
-            //TODO can be checked with isNullOrEmpty in service
-            return _library.Values.FirstOrDefault(dvd => dvd.Title.Equals(title));
+
+            if (string.IsNullOrEmpty(title))
+            {
+                throw new LibraryDaoException("Title must not be blank");
+            }
+
+            DVD dvd = _library.Values.FirstOrDefault(dvd => dvd.Title.Equals(title));
+
+            if (dvd != null)
+            {
+                return dvd;
+            }
+            else
+            {
+                throw new LibraryDaoException("No DVD by this title in library");
+            }
         }
 
         public List<DVD> ReadAll()

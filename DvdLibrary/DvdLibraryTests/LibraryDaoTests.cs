@@ -118,6 +118,22 @@ namespace DvdLibraryTests
         }
 
         [Test]
+        public void ReadByTitleFail()
+        {
+            DVD d1 = dao.CreateDvd(dvd1);
+
+            try
+            {
+                DVD fail = dao.ReadDvdByTitle("");
+                Assert.Fail();
+            }
+            catch (LibraryDaoException e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
         public void ReadAllTest()
         {
             DVD d1 = dao.CreateDvd(dvd1);
