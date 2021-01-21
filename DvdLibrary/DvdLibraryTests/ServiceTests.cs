@@ -336,7 +336,7 @@ namespace DvdLibraryTests
                 Assert.Pass();
             }
         }
-        
+
         [Test]
         public void ReadByStudioBadStudioFail()
         {
@@ -350,6 +350,163 @@ namespace DvdLibraryTests
             try
             {
                 List<DVD> fail = serv.ReadAllByStudio("No Studios, LLC");
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void ReadAllByReleaseYrTest()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> in1995 = serv.ReadAllByReleaseYear(DateTime.Parse("01-01-1995"));
+
+                Assert.AreEqual(2, in1995.Count);
+                Assert.IsFalse(in1995.Contains(d1));
+                Assert.IsTrue(in1995.Contains(d2));
+                Assert.IsTrue(in1995.Contains(d3));
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void ReadAllByReleaseYrBadPastYearFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> badYear = serv.ReadAllByReleaseYear(DateTime.MinValue);
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+        
+        [Test]
+        public void ReadAllByReleaseYrBadFutureYearFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> badYear = serv.ReadAllByReleaseYear(DateTime.Today.AddYears(3));
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+        
+        [Test]
+        public void ReadAllByReleaseYrNoneForYearFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> badYear = serv.ReadAllByReleaseYear(DateTime.Parse("01-01-1932"));
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void ReadAllByMpaaTest()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> nrFilms = serv.ReadAllByMpaaRating(d1.MpaaRating);
+
+                Assert.AreEqual(3, nrFilms.Count);
+                Assert.IsTrue(nrFilms.Contains(d1));
+                Assert.IsTrue(nrFilms.Contains(d2));
+                Assert.IsTrue(nrFilms.Contains(d3));
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Fail();
+            }
+        }
+        
+        [Test]
+        public void ReadAllByMpaaEmptyStringFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> badRating = serv.ReadAllByMpaaRating("");
+
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+        
+        [Test]
+        public void ReadAllByMpaaBadRatingFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> badRating = serv.ReadAllByMpaaRating("R");
+
                 Assert.Fail();
             }
             catch (NoRecordException e)
