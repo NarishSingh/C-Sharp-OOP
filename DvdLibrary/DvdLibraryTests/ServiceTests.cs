@@ -152,15 +152,31 @@ namespace DvdLibraryTests
         }
 
         [Test]
-        public void ReadByTitleFail()
+        public void ReadByTitleEmptyStringFail()
         {
             dvd1 = serv.ValidateDvd(dvd1);
             DVD d1 = serv.CreateDvd(dvd1);
 
             try
             {
-                DVD fromDao1 = serv.ReadDvdByTitle("");
-                DVD fromDao2 = serv.ReadDvdByTitle("None");
+                DVD fromDao = serv.ReadDvdByTitle("");
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void ReadByTitleBadTitleFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+
+            try
+            {
+                DVD fromDao = serv.ReadDvdByTitle("None");
                 Assert.Fail();
             }
             catch (NoRecordException e)
@@ -182,7 +198,7 @@ namespace DvdLibraryTests
             try
             {
                 List<DVD> all = serv.ReadAll();
-                
+
                 Assert.AreEqual(3, all.Count);
                 Assert.IsTrue(all.Contains(d1));
                 Assert.IsTrue(all.Contains(d2));
@@ -200,6 +216,140 @@ namespace DvdLibraryTests
             try
             {
                 List<DVD> fail = serv.ReadAll();
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void ReadByDirectorTest()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> sippy = serv.ReadAllByDirector(d1.Director);
+
+                Assert.AreEqual(2, sippy.Count);
+                Assert.IsTrue(sippy.Contains(d1));
+                Assert.IsTrue(sippy.Contains(d2));
+                Assert.IsFalse(sippy.Contains(d3));
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void ReadByDirectorEmptyStringFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> fail = serv.ReadAllByDirector("");
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void ReadByDirectorBadDirectorFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> fail = serv.ReadAllByDirector("Singham");
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void ReadAllByStudioTest()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> sippyFilms = serv.ReadAllByStudio(d1.Studio);
+
+                Assert.AreEqual(2, sippyFilms.Count);
+                Assert.IsTrue(sippyFilms.Contains(d1));
+                Assert.IsTrue(sippyFilms.Contains(d2));
+                Assert.IsFalse(sippyFilms.Contains(d3));
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void ReadByStudioEmptyStringFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> fail = serv.ReadAllByStudio("");
+                Assert.Fail();
+            }
+            catch (NoRecordException e)
+            {
+                Assert.Pass();
+            }
+        }
+        
+        [Test]
+        public void ReadByStudioBadStudioFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            try
+            {
+                List<DVD> fail = serv.ReadAllByStudio("No Studios, LLC");
                 Assert.Fail();
             }
             catch (NoRecordException e)
