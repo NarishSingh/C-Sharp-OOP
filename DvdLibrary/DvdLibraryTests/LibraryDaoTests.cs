@@ -224,26 +224,12 @@ namespace DvdLibraryTests
             List<DVD> afterDel = dao.ReadAll();
 
             Assert.AreEqual(3, original.Count);
+            Assert.AreEqual(2, afterDel.Count);
             Assert.IsTrue(deleted);
             Assert.AreNotEqual(original, afterDel);
             Assert.IsFalse(afterDel.Contains(d1));
             Assert.IsTrue(afterDel.Contains(d2));
             Assert.IsTrue(afterDel.Contains(d3));
-        }
-
-        [Test]
-        public void DeleteNullIdFail()
-        {
-            DVD bad = new DVD();
-            try
-            {
-                bool delFail = dao.DeleteDvd(bad.Id);
-                Assert.Fail();
-            }
-            catch (Exception e)
-            {
-                Assert.Pass();
-            }
         }
 
         [Test]

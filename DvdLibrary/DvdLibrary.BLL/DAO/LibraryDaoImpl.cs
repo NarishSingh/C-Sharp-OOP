@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DvdLibrary.BLL.DTO;
@@ -105,6 +106,11 @@ namespace DvdLibrary.BLL.DAO
 
         public DVD UpdateDvd(DVD update)
         {
+            if (update.Id == 0)
+            {
+                throw new LibraryDaoException("DVD not validated, update rejected");
+            }
+            
             LoadLibrary();
             try
             {

@@ -514,5 +514,107 @@ namespace DvdLibraryTests
                 Assert.Pass();
             }
         }
+
+        [Test]
+        public void UpdateDvdTest()
+        {
+            const string newTitle = "Edit";
+            const string newDir = "EditedSingh";
+
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            DVD original = serv.ReadDvdById(d1.Id);
+
+            d1.Title = newTitle;
+            d1.Director = newDir;
+
+            try
+            {
+                DVD d1Edit = serv.UpdateDvd(d1);
+                DVD edited = serv.ReadDvdById(d1.Id);
+                List<DVD> all = serv.ReadAll();
+                
+                Assert.NotNull(d1Edit);
+                Assert.NotNull(edited);
+                Assert.AreEqual(d1Edit.Title, newTitle);
+                Assert.AreEqual(d1Edit.Director, newDir);
+                Assert.AreNotEqual(original, d1Edit);
+                Assert.AreNotEqual(original, edited);
+                Assert.AreEqual(d1Edit, edited);
+                Assert.IsTrue(all.Contains(d1Edit));
+                Assert.IsFalse(all.Contains(original));
+            }
+            catch (PersistenceFailedException e)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void UpdateFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+
+            DVD badDvd = new DVD();
+
+            try
+            {
+                DVD fail = serv.UpdateDvd(badDvd);
+                Assert.Fail();
+            }
+            catch (PersistenceFailedException e)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void DeleteDvdTest()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+            dvd2 = serv.ValidateDvd(dvd2);
+            DVD d2 = serv.CreateDvd(dvd2);
+            dvd3 = serv.ValidateDvd(dvd3);
+            DVD d3 = serv.CreateDvd(dvd3);
+
+            List<DVD> original = serv.ReadAll();
+
+            try
+            {
+                bool deleted = serv.DeleteDvd(d1.Id);
+                List<DVD> afterDel = serv.ReadAll();
+                
+                Assert.AreEqual(3, original.Count);
+                Assert.AreEqual(2, afterDel.Count);
+                Assert.IsTrue(deleted);
+                Assert.AreNotEqual(original, afterDel);
+                Assert.IsFalse(afterDel.Contains(d1));
+                Assert.IsTrue(afterDel.Contains(d2));
+                Assert.IsTrue(afterDel.Contains(d3));
+            }
+            catch (PersistenceFailedException e)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void DeleteFail()
+        {
+            dvd1 = serv.ValidateDvd(dvd1);
+            DVD d1 = serv.CreateDvd(dvd1);
+
+            try
+            {
+                bool fail = serv.DeleteDvd(0);
+                Assert.Fail();
+            }
+            catch (PersistenceFailedException e)
+            {
+                Assert.Pass();
+            }
+        }
     }
 }
