@@ -1,4 +1,7 @@
 ﻿using System;
+using DvdLibrary.BLL.Service;
+using DvdLibrary.UI.Controller;
+using DvdLibrary.UI.View;
 
 namespace DvdLibrary.UI
 {
@@ -6,7 +9,8 @@ namespace DvdLibrary.UI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            DvdLibraryController c = new DvdLibraryController(new Service(), new DvdLibraryView());
+            c.Run();
         }
     }
 }
