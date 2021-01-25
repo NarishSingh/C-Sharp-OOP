@@ -43,13 +43,6 @@ namespace DvdLibrary.BLL.Service
             return dvdRequest;
         }
 
-        private int NewId()
-        {
-            return _dao.ReadAll()
-                .Select(d => d.Id)
-                .Max() + 1;
-        }
-
         public DVD CreateDvd(DVD dvd)
         {
             try
@@ -188,6 +181,18 @@ namespace DvdLibrary.BLL.Service
             {
                 throw new PersistenceFailedException(e.Message, e);
             }
+        }
+        
+        /*Helpers*/
+        /// <summary>
+        /// Generate a new id for DVD
+        /// </summary>
+        /// <returns>int for the new id</returns>
+        private int NewId()
+        {
+            return _dao.ReadAll()
+                .Select(d => d.Id)
+                .Max() + 1;
         }
     }
 }

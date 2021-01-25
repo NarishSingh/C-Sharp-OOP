@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DvdLibrary.BLL.DTO;
 using DvdLibrary.BLL.Service;
 using DvdLibrary.UI.View;
@@ -43,7 +44,7 @@ namespace DvdLibrary.UI.Controller
                         AddDvd();
                         break;
                     case 3:
-
+                        RemoveDvd();
                         break;
                     case 4:
 
@@ -110,6 +111,40 @@ namespace DvdLibrary.UI.Controller
             else
             {
                 _view.DvdAddCanceled();
+            }
+        }
+
+        private void RemoveDvd()
+        {
+            Console.Clear();
+            _view.DisplayRemoveBanner();
+
+            List<DVD> dvds;
+            try
+            {
+                dvds = _service.ReadAll();
+                _view.ListIndexedDvds(dvds);
+
+                //get validated id and pull by that key
+                int minKey = dvds.Select(d => d.Id).Min();
+                int maxKey = dvds.Select(d => d.Id).Max();
+                int i = _view.SelectForRemoval(minKey, maxKey);
+
+                DVD del = _service.ReadDvdById(i);
+
+                if (_view.RemoveConfirmation(del))
+                {
+                    _service.DeleteDvd(i);
+                    _view.RemoveSuccess();
+                }
+                else
+                {
+                    _view.RemoveCanceled();
+                }
+            }
+            catch (Exception e) when (e is NoRecordException || e is PersistenceFailedException)
+            {
+                _view.DisplayErrorMsg(e.Message);
             }
         }
 

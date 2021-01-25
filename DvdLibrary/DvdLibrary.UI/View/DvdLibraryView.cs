@@ -7,7 +7,7 @@ namespace DvdLibrary.UI.View
     public class DvdLibraryView
     {
         public static string Bar =
-            "======================================================================================";
+            "===========================================================================================";
 
         public static string RecordFormat = "{0, -20} {1, -10} {2, -20} {3, -20} {4, 5} {5, 5}";
         public static string IndexedFormat = "{0, -2} {1, -20} {2, -10} {3, -20} {4, -20} {5, 5} {6, 5}";
@@ -151,6 +151,59 @@ namespace DvdLibrary.UI.View
             ViewConfirm();
         }
 
+        /*REMOVE DVD*/
+        /// <summary>
+        /// Display opening add dvd banner for UI
+        /// </summary>
+        public void DisplayRemoveBanner()
+        {
+            Console.WriteLine("Remove DVD from Library");
+            Console.WriteLine(Bar);
+        }
+
+        /// <summary>
+        /// Select the index for removal from library
+        /// </summary>
+        /// <param name="min">int for the minimum id to select from</param>
+        /// <param name="max">int for the maximum id to select from</param>
+        /// <returns>int for the index of DVD to be removed</returns>
+        public int SelectForRemoval(int min, int max)
+        {
+            return GetRequiredIndex("Enter index of DVD to be removed: ", min, max);
+        }
+
+        /// <summary>
+        /// Confirm deletion of record
+        /// </summary>
+        /// <param name="d">DVD obj to be deleted or kept</param>
+        /// <returns>True on user confirmation, false otherwise</returns>
+        public bool RemoveConfirmation(DVD d)
+        {
+            return GetUserConfirmation($"Remove {d.Title}?");
+        }
+
+        /// <summary>
+        /// Display closing removal success banner
+        /// </summary>
+        public void RemoveSuccess()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("DVD successfully removed.");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
+        /// <summary>
+        /// Display closing removal failure banner
+        /// </summary>
+        public void RemoveCanceled()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Delete canceled");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
         /*EXIT MESSAGE*/
         /// <summary>
         /// Exit banner for app quit
@@ -186,6 +239,20 @@ namespace DvdLibrary.UI.View
             }
 
             ViewConfirm();
+        }
+
+        /// <summary>
+        /// List DVDs to UI
+        /// </summary>
+        /// <param name="dvds">Valid List of DVDs for display</param>
+        public void ListIndexedDvds(List<DVD> dvds)
+        {
+            foreach (DVD d in dvds)
+            {
+                Console.WriteLine(IndexedFormat, d.Id, d.Title, d.ReleaseDate.ToString("MM/dd/yyyy"), d.Director,
+                    d.Studio,
+                    d.MpaaRating, d.UserRating);
+            }
         }
 
         /// <summary>
@@ -291,6 +358,43 @@ namespace DvdLibrary.UI.View
                         Console.WriteLine("Press any key to continue. . .");
                         Console.ReadKey();
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read and validate an index number from user
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format</param>
+        /// <param name="minIdx">int corresponding to the minimum index of DVD list</param>
+        /// <param name="maxIdx">int corresponding to the maximum index of DVD list</param>
+        /// <returns>int corresponding to the id of the DVD to be selected</returns>
+        private static int GetRequiredIndex(string prompt, int minIdx, int maxIdx)
+        {
+            int output;
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (!int.TryParse(input, out output))
+                {
+                    Console.WriteLine("Please enter a valid index for DVD in library");
+                    Console.WriteLine("Press any key to continue. . .");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    //validate that index is 1-list index maximum
+                    if (output < minIdx || output > maxIdx)
+                    {
+                        Console.WriteLine("Please choose an existing DVD");
+                        Console.WriteLine("Press any key to continue. . .");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    return output;
                 }
             }
         }
