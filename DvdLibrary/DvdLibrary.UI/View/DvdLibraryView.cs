@@ -6,10 +6,12 @@ namespace DvdLibrary.UI.View
 {
     public class DvdLibraryView
     {
-        public static string Bar = "=========================================================================";
-        public static string RecordFormat = "{0, -20} {1, 10} {2, -20} {3, -20} {4, 5} {5, 5}";
-        public static string IndexedFormat = "{0, -2} {1, -20} {2, 10} {3, -20} {4, -20} {5, 5} {6, 5}";
-        
+        public static string Bar =
+            "======================================================================================";
+
+        public static string RecordFormat = "{0, -20} {1, -10} {2, -20} {3, -20} {4, 5} {5, 5}";
+        public static string IndexedFormat = "{0, -2} {1, -20} {2, -10} {3, -20} {4, -20} {5, 5} {6, 5}";
+
         /*Main Menu*/
         /// <summary>
         /// Display main menu banner for UI
@@ -27,7 +29,7 @@ namespace DvdLibrary.UI.View
             Console.WriteLine("\nQ - Quit");
             Console.WriteLine(Bar);
         }
-        
+
         /// <summary>
         /// Get menu choice from user
         /// </summary>
@@ -56,7 +58,7 @@ namespace DvdLibrary.UI.View
                 }
             }
         }
-        
+
         /*View Library*/
         /// <summary>
         /// Display opening library banner for UI
@@ -65,8 +67,19 @@ namespace DvdLibrary.UI.View
         {
             Console.WriteLine("Library");
             Console.WriteLine(Bar);
+            DisplayDvdRecordHeader();
         }
-        
+
+        /// <summary>
+        /// Display header for List view
+        /// </summary>
+        public void DisplayDvdRecordHeader()
+        {
+            Console.WriteLine();
+            Console.WriteLine(RecordFormat, "Title", "Release", "Director", "Studio", "MPAA", "Rate");
+            Console.WriteLine(Bar);
+        }
+
         /*Add DVD*/
         /// <summary>
         /// Display opening add dvd banner for UI
@@ -87,7 +100,7 @@ namespace DvdLibrary.UI.View
             DateTime release = GetRequiredDate("Release Date [MM-dd-yyyy]: ");
             string dir = GetRequiredString("Director: ");
             string studio = GetRequiredString("Studio: ");
-            string mpaa = GetRequiredString("Age Rating (US/Int'l allowed: ");
+            string mpaa = GetRequiredString("Age Rating (US/Int'l): ");
             string userRate = GetRequiredString("User Rating /10: ");
 
             return new DVD
@@ -101,6 +114,43 @@ namespace DvdLibrary.UI.View
             };
         }
 
+        /// <summary>
+        /// Confirm new DVD record
+        /// </summary>
+        /// <param name="request">DVD request</param>
+        /// <returns>True to confirm, false to cancel</returns>
+        public bool ConfirmAdd(DVD request)
+        {
+            Console.WriteLine();
+            DisplayDvdRecordHeader();
+            Console.WriteLine(RecordFormat, request.Title, request.ReleaseDate.ToString("MM/dd/yyyy"),
+                request.Director, request.Studio, request.MpaaRating, request.UserRating);
+
+            return GetUserConfirmation("Add DVD?");
+        }
+
+        /// <summary>
+        /// Success banner for DVD add
+        /// </summary>
+        public void DvdAddedSuccess()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("DVD successfully added.");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
+        /// <summary>
+        /// Cancellation banner for DVD add
+        /// </summary>
+        public void DvdAddCanceled()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Add canceled");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
         /*EXIT MESSAGE*/
         /// <summary>
         /// Exit banner for app quit
@@ -111,7 +161,7 @@ namespace DvdLibrary.UI.View
             Console.WriteLine("***Thank you for using DVD Library Manager***");
             Console.ForegroundColor = ConsoleColor.Gray;
         }
-        
+
         /*View Error*/
         public void DisplayErrorMsg(string eMsg)
         {
@@ -131,11 +181,13 @@ namespace DvdLibrary.UI.View
         {
             foreach (DVD d in dvds)
             {
-                Console.WriteLine(RecordFormat, d.Title, d.ReleaseDate, d.Director, d.Studio, d.MpaaRating);
+                Console.WriteLine(RecordFormat, d.Title, d.ReleaseDate.ToString("MM/dd/yyyy"), d.Director, d.Studio,
+                    d.MpaaRating, d.UserRating);
             }
+
             ViewConfirm();
         }
-        
+
         /// <summary>
         /// Display closing banner and prompt for any view
         /// </summary>
@@ -147,7 +199,7 @@ namespace DvdLibrary.UI.View
             Console.WriteLine("Press any key to continue. . .");
             Console.ReadKey();
         }
-        
+
         /// <summary>
         /// Read and validate string input
         /// </summary>
@@ -172,7 +224,7 @@ namespace DvdLibrary.UI.View
                 }
             }
         }
-        
+
         /// <summary>
         /// Read and validate a date from user
         /// </summary>
@@ -191,7 +243,8 @@ namespace DvdLibrary.UI.View
                     Console.WriteLine("Please enter valid text");
                     Console.WriteLine("Press any key to continue. . .");
                     Console.ReadKey();
-                } else if (DateTime.TryParse(input, out output))
+                }
+                else if (DateTime.TryParse(input, out output))
                 {
                     return output;
                 }
@@ -200,6 +253,44 @@ namespace DvdLibrary.UI.View
                     Console.WriteLine("Please enter a valid date in MM-dd-yyyy formatting");
                     Console.WriteLine("Press any key to continue. . .");
                     Console.ReadKey();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read and validate user confirmation or cancellation
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format</param>
+        /// <returns>True if confirmed, false to cancel action</returns>
+        private bool GetUserConfirmation(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt + " [Y/N]: ");
+                string input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    Console.WriteLine("Please enter Y/N.");
+                    Console.WriteLine("Press any key to continue. . .");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    if (input.Equals("Y") || input.Equals("y"))
+                    {
+                        return true;
+                    }
+                    else if (input.Equals("N") || input.Equals("n"))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please enter Y/N.");
+                        Console.WriteLine("Press any key to continue. . .");
+                        Console.ReadKey();
+                    }
                 }
             }
         }

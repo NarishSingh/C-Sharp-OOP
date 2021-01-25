@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DvdLibrary.BLL.DTO;
@@ -110,7 +109,7 @@ namespace DvdLibrary.BLL.DAO
             {
                 throw new LibraryDaoException("DVD not validated, update rejected");
             }
-            
+
             LoadLibrary();
             try
             {
@@ -120,6 +119,7 @@ namespace DvdLibrary.BLL.DAO
             {
                 throw new LibraryDaoException("Cannot update non-existent record");
             }
+
             WriteLibrary();
 
             return _library.ContainsValue(update) ? update : null;
@@ -149,7 +149,7 @@ namespace DvdLibrary.BLL.DAO
         private string FormatRecord(DVD d)
         {
             return
-                $"{d.Id}::{d.Title}::{d.ReleaseDate.ToString("MM/dd/yyyy")}::{d.Director}::{d.Studio}::" +
+                $"{d.Id}::{d.Title}::{d.ReleaseDate:MM/dd/yyyy}::{d.Director}::{d.Studio}::" +
                 $"{d.MpaaRating}::{d.UserRating}";
         }
 
@@ -162,7 +162,7 @@ namespace DvdLibrary.BLL.DAO
 
             try
             {
-                using (StreamReader sr = new StreamReader(_path))
+                using (StreamReader sr = new(_path))
                 {
                     string line;
 

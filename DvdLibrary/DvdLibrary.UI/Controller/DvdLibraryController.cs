@@ -40,7 +40,7 @@ namespace DvdLibrary.UI.Controller
                         ListLibrary();
                         break;
                     case 2:
-
+                        AddDvd();
                         break;
                     case 3:
 
@@ -50,10 +50,12 @@ namespace DvdLibrary.UI.Controller
                         break;
 
                     case 5:
-                        //this will lead to sub menu for search
+                        //TODO this will lead to sub menu for search
                         break;
                 }
             }
+
+            ExitMsg();
         }
 
         /// <summary>
@@ -84,14 +86,33 @@ namespace DvdLibrary.UI.Controller
             }
         }
 
+        /// <summary>
+        /// Add new dvd record to file
+        /// </summary>
         private void AddDvd()
         {
             Console.Clear();
-           _view.DisplayAddBanner();
-           
-           //TODO finish, might need to split dvd validation from create
+            _view.DisplayAddBanner();
+
+            DVD request = _view.newDvd();
+            if (_view.ConfirmAdd(request))
+            {
+                try
+                {
+                    _service.CreateDvd(_service.ValidateDvd(request));
+                    _view.DvdAddedSuccess();
+                }
+                catch (PersistenceFailedException e)
+                {
+                    _view.DisplayErrorMsg(e.Message);
+                }
+            }
+            else
+            {
+                _view.DvdAddCanceled();
+            }
         }
-        
+
         /// <summary>
         /// Display exit banner for app
         /// </summary>
