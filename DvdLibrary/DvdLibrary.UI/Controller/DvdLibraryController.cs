@@ -47,9 +47,8 @@ namespace DvdLibrary.UI.Controller
                         RemoveDvd();
                         break;
                     case 4:
-
+                        UpdateDvd();
                         break;
-
                     case 5:
                         //TODO this will lead to sub menu for search
                         break;
@@ -114,6 +113,9 @@ namespace DvdLibrary.UI.Controller
             }
         }
 
+        /// <summary>
+        /// Remove DVD record from library
+        /// </summary>
         private void RemoveDvd()
         {
             Console.Clear();
@@ -140,6 +142,42 @@ namespace DvdLibrary.UI.Controller
                 else
                 {
                     _view.DisplayCancelBanner("Delete canceled");
+                }
+            }
+            catch (Exception e) when (e is NoRecordException || e is PersistenceFailedException)
+            {
+                _view.DisplayErrorMsg(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Update DVD record in library
+        /// </summary>
+        private void UpdateDvd()
+        {
+            Console.Clear();
+            _view.DisplayOpeningBanner("Update DVD");
+
+            List<DVD> dvds;
+            try
+            {
+                dvds = _service.ReadAll();
+                _view.ListIndexedDvds(dvds);
+
+                int minKey = dvds.Select(d => d.Id).Min();
+                int maxKey = dvds.Select(d => d.Id).Max();
+                int i = _view.SelectForUpdate(minKey, maxKey);
+
+                DVD updateRequest = _view.EditDvd(_service.ReadDvdById(i));
+
+                if (_view.EditConfirmation(updateRequest))
+                {
+                    _service.UpdateDvd(updateRequest);
+                    _view.DisplaySuccessBanner("DVD successfully edited.");
+                }
+                else
+                {
+                    _view.DisplayCancelBanner("Edit canceled.");
                 }
             }
             catch (Exception e) when (e is NoRecordException || e is PersistenceFailedException)
