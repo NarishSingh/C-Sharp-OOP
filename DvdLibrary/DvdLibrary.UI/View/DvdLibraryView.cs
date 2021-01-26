@@ -6,11 +6,10 @@ namespace DvdLibrary.UI.View
 {
     public class DvdLibraryView
     {
-        public static string Bar =
-            "===========================================================================================";
+        private const string Bar = "===========================================================================================";
 
-        public static string RecordFormat = "{0, -20} {1, -10} {2, -20} {3, -20} {4, 5} {5, 5}";
-        public static string IndexedFormat = "{0, -2} {1, -20} {2, -10} {3, -20} {4, -20} {5, 5} {6, 5}";
+        private const string RecordFormat = "{0, -20} {1, -10} {2, -20} {3, -20} {4, 5} {5, 5}";
+        private const string IndexedFormat = "{0, -2} {1, -20} {2, -10} {3, -20} {4, -20} {5, 5} {6, 5}";
 
         /*Main Menu*/
         /// <summary>
@@ -65,31 +64,11 @@ namespace DvdLibrary.UI.View
         /// </summary>
         public void DisplayLibraryBanner()
         {
-            Console.WriteLine("Library");
-            Console.WriteLine(Bar);
+            DisplayOpeningBanner("Library");
             DisplayDvdRecordHeader();
         }
 
-        /// <summary>
-        /// Display header for List view
-        /// </summary>
-        public void DisplayDvdRecordHeader()
-        {
-            Console.WriteLine();
-            Console.WriteLine(RecordFormat, "Title", "Release", "Director", "Studio", "MPAA", "Rate");
-            Console.WriteLine(Bar);
-        }
-
         /*Add DVD*/
-        /// <summary>
-        /// Display opening add dvd banner for UI
-        /// </summary>
-        public void DisplayAddBanner()
-        {
-            Console.WriteLine("Add DVD to Library");
-            Console.WriteLine(Bar);
-        }
-
         /// <summary>
         /// Create a new DVD obj for addition to library
         /// </summary>
@@ -129,38 +108,7 @@ namespace DvdLibrary.UI.View
             return GetUserConfirmation("Add DVD?");
         }
 
-        /// <summary>
-        /// Success banner for DVD add
-        /// </summary>
-        public void DvdAddedSuccess()
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("DVD successfully added.");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            ViewConfirm();
-        }
-
-        /// <summary>
-        /// Cancellation banner for DVD add
-        /// </summary>
-        public void DvdAddCanceled()
-        {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("Add canceled");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            ViewConfirm();
-        }
-
         /*REMOVE DVD*/
-        /// <summary>
-        /// Display opening add dvd banner for UI
-        /// </summary>
-        public void DisplayRemoveBanner()
-        {
-            Console.WriteLine("Remove DVD from Library");
-            Console.WriteLine(Bar);
-        }
-
         /// <summary>
         /// Select the index for removal from library
         /// </summary>
@@ -179,29 +127,8 @@ namespace DvdLibrary.UI.View
         /// <returns>True on user confirmation, false otherwise</returns>
         public bool RemoveConfirmation(DVD d)
         {
+            Console.WriteLine();
             return GetUserConfirmation($"Remove {d.Title}?");
-        }
-
-        /// <summary>
-        /// Display closing removal success banner
-        /// </summary>
-        public void RemoveSuccess()
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("DVD successfully removed.");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            ViewConfirm();
-        }
-
-        /// <summary>
-        /// Display closing removal failure banner
-        /// </summary>
-        public void RemoveCanceled()
-        {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("Delete canceled");
-            Console.ForegroundColor = ConsoleColor.Gray;
-            ViewConfirm();
         }
 
         /*EXIT MESSAGE*/
@@ -226,6 +153,50 @@ namespace DvdLibrary.UI.View
         }
 
         /*HELPERS*/
+        /// <summary>
+        /// Display header for List view
+        /// </summary>
+        private void DisplayDvdRecordHeader()
+        {
+            Console.WriteLine();
+            Console.WriteLine(RecordFormat, "Title", "Release", "Director", "Studio", "MPAA", "Rate");
+            Console.WriteLine(Bar);
+        }
+
+        /// <summary>
+        /// Display opening banners for UI
+        /// </summary>
+        /// <param name="header">string for banner header</param>
+        public void DisplayOpeningBanner(string header)
+        {
+            Console.WriteLine(header);
+            Console.WriteLine(Bar);
+        }
+
+        /// <summary>
+        /// Display closing success banner
+        /// </summary>
+        /// <param name="msg">string for success message</param>
+        public void DisplaySuccessBanner(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
+        /// <summary>
+        /// Display closing cancel banner
+        /// </summary>
+        /// <param name="msg">string for cancel message</param>
+        public void DisplayCancelBanner(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            ViewConfirm();
+        }
+
         /// <summary>
         /// List DVDs to UI
         /// </summary>

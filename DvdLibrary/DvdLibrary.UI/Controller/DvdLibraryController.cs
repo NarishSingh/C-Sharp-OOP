@@ -93,7 +93,7 @@ namespace DvdLibrary.UI.Controller
         private void AddDvd()
         {
             Console.Clear();
-            _view.DisplayAddBanner();
+            _view.DisplayOpeningBanner("Add DVD");
 
             DVD request = _view.newDvd();
             if (_view.ConfirmAdd(request))
@@ -101,7 +101,7 @@ namespace DvdLibrary.UI.Controller
                 try
                 {
                     _service.CreateDvd(_service.ValidateDvd(request));
-                    _view.DvdAddedSuccess();
+                    _view.DisplaySuccessBanner("DVD successfully added.");
                 }
                 catch (PersistenceFailedException e)
                 {
@@ -110,14 +110,14 @@ namespace DvdLibrary.UI.Controller
             }
             else
             {
-                _view.DvdAddCanceled();
+                _view.DisplayCancelBanner("Add canceled");
             }
         }
 
         private void RemoveDvd()
         {
             Console.Clear();
-            _view.DisplayRemoveBanner();
+            _view.DisplayOpeningBanner("Remove DVD from Library");
 
             List<DVD> dvds;
             try
@@ -135,11 +135,11 @@ namespace DvdLibrary.UI.Controller
                 if (_view.RemoveConfirmation(del))
                 {
                     _service.DeleteDvd(i);
-                    _view.RemoveSuccess();
+                    _view.DisplaySuccessBanner("DVD successfully removed.");
                 }
                 else
                 {
-                    _view.RemoveCanceled();
+                    _view.DisplayCancelBanner("Delete canceled");
                 }
             }
             catch (Exception e) when (e is NoRecordException || e is PersistenceFailedException)
