@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DvdLibrary.BLL.DTO;
 using DvdLibrary.BLL.Service;
@@ -50,7 +51,7 @@ namespace DvdLibrary.UI.Controller
                         UpdateDvd();
                         break;
                     case 5:
-                        //TODO this will lead to sub menu for search
+                        SearchMenu();
                         break;
                 }
             }
@@ -73,7 +74,7 @@ namespace DvdLibrary.UI.Controller
         private void ListLibrary()
         {
             Console.Clear();
-            _view.DisplayLibraryBanner();
+            _view.DisplayOpeningBanner("Library");
 
             try
             {
@@ -183,6 +184,69 @@ namespace DvdLibrary.UI.Controller
             catch (Exception e) when (e is NoRecordException || e is PersistenceFailedException)
             {
                 _view.DisplayErrorMsg(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Search submenu functionality
+        /// </summary>
+        private void SearchMenu()
+        {
+            bool searching = true;
+
+            while (searching)
+            {
+                Console.Clear();
+                _view.DisplayOpeningBanner("Search");
+
+                _view.DisplaySearchMenu();
+
+                int slct = _view.GetMenuChoice(1, 5);
+                string searchQuery;
+
+                try
+                {
+                    switch (slct)
+                    {
+                        case 1:
+                            searchQuery = _view.GetSearchQuery();
+                            DVD dvd = _service.ReadDvdByTitle(searchQuery);
+                            _view.ListDvds(new List<DVD> {dvd});
+                            break;
+                        case 2:
+                            searchQuery = _view.GetSearchQuery();
+                            List<DVD> byDir = _service.ReadAllByDirector(searchQuery);
+                            _view.ListDvds(byDir);
+                            break;
+                        case 3:
+                            searchQuery = _view.GetSearchQuery();
+                            List<DVD> byStu = _service.ReadAllByStudio(searchQuery);
+                            _view.ListDvds(byStu);
+                            break;
+                        case 4:
+                            searchQuery = _view.GetSearchQuery();
+                            if (DateTime.TryParseExact(searchQuery, "yyyy", CultureInfo.InvariantCulture,
+                                DateTimeStyles.None, out DateTime dateQuery))
+                            {
+                                List<DVD> byYr = _service.ReadAllByReleaseYear(dateQuery);
+                                _view.ListDvds(byYr);
+                            }
+
+                            break;
+                        case 5:
+                            searchQuery = _view.GetSearchQuery();
+                            List<DVD> byMpaa = _service.ReadAllByMpaaRating(searchQuery);
+                            _view.ListDvds(byMpaa);
+                            break;
+                        case 0:
+                            searching = false;
+                            break;
+                    }
+                }
+                catch (NoRecordException e)
+                {
+                    _view.DisplayErrorMsg(e.Message);
+                }
             }
         }
 

@@ -61,20 +61,12 @@ namespace DvdLibrary.UI.View
 
         /*View Library*/
         /// <summary>
-        /// Display opening library banner for UI
-        /// </summary>
-        public void DisplayLibraryBanner()
-        {
-            DisplayOpeningBanner("Library");
-            DisplayDvdRecordHeader();
-        }
-
-        /// <summary>
         /// List DVDs to UI
         /// </summary>
         /// <param name="dvds">Valid List of DVDs for display</param>
         public void ListDvds(List<DVD> dvds)
         {
+            DisplayDvdRecordHeader();
             foreach (DVD d in dvds)
             {
                 Console.WriteLine(RecordFormat, d.Title, d.ReleaseDate.ToString("MM/dd/yyyy"), d.Director, d.Studio,
@@ -203,6 +195,30 @@ namespace DvdLibrary.UI.View
             Console.WriteLine();
 
             return GetUserConfirmation("Edit DVD?");
+        }
+
+        /*SEARCH*/
+        /// <summary>
+        /// Display search submenu for UI
+        /// </summary>
+        public void DisplaySearchMenu()
+        {
+            Console.WriteLine("1. By Title");
+            Console.WriteLine("2. By Director");
+            Console.WriteLine("3. By Studio");
+            Console.WriteLine("4. By Release Year");
+            Console.WriteLine("5. By MPAA Rating");
+            Console.WriteLine("\nQ - Return to Main Menu");
+            Console.WriteLine(Bar);
+        }
+
+        /// <summary>
+        /// Get a search query
+        /// </summary>
+        /// <returns>string parsable for search functions</returns>
+        public string GetSearchQuery()
+        {
+            return GetRequiredString("Enter Search Query: ");
         }
 
         /*EXIT MESSAGE*/
