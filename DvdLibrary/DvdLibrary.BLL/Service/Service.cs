@@ -182,7 +182,7 @@ namespace DvdLibrary.BLL.Service
                 throw new PersistenceFailedException(e.Message, e);
             }
         }
-        
+
         /*Helpers*/
         /// <summary>
         /// Generate a new id for DVD

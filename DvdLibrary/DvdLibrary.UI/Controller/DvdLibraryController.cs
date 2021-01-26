@@ -201,11 +201,10 @@ namespace DvdLibrary.UI.Controller
 
                 _view.DisplaySearchMenu();
 
-                int slct = _view.GetMenuChoice(1, 5);
-                string searchQuery;
-
                 try
                 {
+                    int slct = _view.GetMenuChoice(1, 5);
+                    string searchQuery;
                     switch (slct)
                     {
                         case 1:

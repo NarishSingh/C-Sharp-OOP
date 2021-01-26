@@ -63,7 +63,7 @@ namespace DvdLibrary.BLL.Service
         /// <summary>
         /// Read all DVDs released that year
         /// </summary>
-        /// <param name="release">DateTime for release date</param>
+        /// <param name="release">DateTime for release dates</param>
         /// <returns>List of all DVDs released that year</returns>
         /// <exception cref="NoRecordException">If list is empty</exception>
         List<DVD> ReadAllByReleaseYear(DateTime release);
