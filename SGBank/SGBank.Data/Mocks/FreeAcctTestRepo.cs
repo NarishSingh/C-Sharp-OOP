@@ -1,14 +1,14 @@
 ﻿using SGBank.Models;
 using SGBank.Models.Interfaces;
 
-namespace SGBank.Data.Stubs
+namespace SGBank.Data.Mocks
 {
     /**
      * Mock Repo is just like a stub class, just hard code data
      */
     public class FreeAcctTestRepo : IAccountRepo
     {
-        private static Account _acct = new Account
+        private static Account _acct = new()
         {
             Name = "Free Account",
             Balance = 100.00M,
