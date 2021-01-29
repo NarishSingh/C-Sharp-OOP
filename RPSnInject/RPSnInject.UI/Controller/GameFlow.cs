@@ -11,9 +11,9 @@ namespace RPSnInject.UI.Controller
         public void Start()
         {
             Choice player1Choice;
-            GameManager gm = DIContainer.Kernel.Get<GameManager>();
+            GameManager gm = DIContainer.Kernel.Get<GameManager>(); //this is like ctor inj
 
-            while(true)
+            while (true)
             {
                 Console.Clear();
                 player1Choice = ConsoleInput.GetChoiceFromUser();
@@ -22,7 +22,9 @@ namespace RPSnInject.UI.Controller
                 ConsoleOutput.DisplayResult(response);
 
                 if (!ConsoleInput.QueryPlayAgain())
+                {
                     return;
+                }
             }
         }
     }

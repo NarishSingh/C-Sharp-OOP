@@ -1,4 +1,5 @@
-﻿using RPSnInject.BLL.DAO;
+﻿using Ninject;
+using RPSnInject.BLL.DAO;
 using RPSnInject.BLL.DTO;
 
 namespace RPSnInject.BLL.Service
@@ -8,7 +9,7 @@ namespace RPSnInject.BLL.Service
      */
     public class GameManager2
     {
-        public IChoiceGetter Chooser { get; set; }
+        [Inject] public IChoiceGetter Chooser { get; set; }
 
         public PlayRoundResponse PlayRound(Choice player1Choice)
         {

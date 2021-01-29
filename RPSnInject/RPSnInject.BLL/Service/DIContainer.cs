@@ -17,7 +17,7 @@ namespace RPSnInject.BLL.Service
          */
         static DIContainer()
         {
-            string chooserType = ConfigurationManager.AppSettings["Chooser"].ToString();
+            string chooserType = ConfigurationManager.AppSettings["Chooser"];
 
             // Tell ninject that IChoiceGetter should resolve to RandomChoice
             if (chooserType == "Random")

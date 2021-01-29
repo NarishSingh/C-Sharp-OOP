@@ -1,4 +1,5 @@
-﻿using RPSnInject.BLL.DAO;
+﻿using Ninject;
+using RPSnInject.BLL.DAO;
 using RPSnInject.BLL.DTO;
 
 namespace RPSnInject.BLL.Service
@@ -10,6 +11,7 @@ namespace RPSnInject.BLL.Service
     {
         private IChoiceGetter _chooser;
 
+        [Inject]
         public void SetChoiceBehavior(IChoiceGetter behavior)
         {
             _chooser = behavior;
