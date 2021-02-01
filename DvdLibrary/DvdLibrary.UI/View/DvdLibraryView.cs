@@ -233,6 +233,10 @@ namespace DvdLibrary.UI.View
         }
 
         /*View Error*/
+        /// <summary>
+        /// Display error message to UI
+        /// </summary>
+        /// <param name="eMsg">string from the exception/error message</param>
         public void DisplayErrorMsg(string eMsg)
         {
             Console.ForegroundColor = ConsoleColor.Red;
