@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+using SGBank.Models;
 
 namespace SGBank.UI.View
 {
@@ -52,6 +54,30 @@ namespace SGBank.UI.View
             }
         }
 
+        /*LOOKUP*/
+        /// <summary>
+        /// Get an account number from user for read
+        /// </summary>
+        /// <returns>string for a user account</returns>
+        public string GetNumForLookup()
+        {
+            return GetRequiredString("Enter Account Number: ");
+        }
+
+        /// <summary>
+        /// Display Account details
+        /// </summary>
+        /// <param name="a">Well formed Account obj</param>
+        public void DisplayAcctDetails(Account a)
+        {
+            Console.WriteLine($"Account Number: {a.AcctNum}");
+            Console.WriteLine($"Name: {a.Name}");
+            Console.WriteLine($"Account Type: {a.Type}");
+            Console.WriteLine($"Balance: ${a.Balance:C}");
+
+            ViewConfirm();
+        }
+
         /*EXIT MESSAGE*/
         /// <summary>
         /// Exit banner for app quit
@@ -88,6 +114,49 @@ namespace SGBank.UI.View
             Console.WriteLine();
             Console.WriteLine("Press any key to continue. . .");
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Display opening banners for UI
+        /// </summary>
+        /// <param name="header">string for banner header</param>
+        public void DisplayOpeningBanner(string header)
+        {
+            Console.WriteLine(header);
+            Console.WriteLine(Bar);
+        }
+
+        /// <summary>
+        /// Read and validate string input
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format</param>
+        /// <returns>the validated string</returns>
+        private static string GetRequiredString(string prompt)
+        {
+            Regex r = new Regex(@"\d{5}");
+
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (r.Match(input).Success)
+                {
+                    return input.Trim();
+                }
+                else if (string.IsNullOrEmpty(input))
+                {
+                    Console.WriteLine("Please enter valid text");
+                    Console.WriteLine("Press any key to continue. . .");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.WriteLine("Please enter valid Account Number");
+                    Console.WriteLine("Press any key to continue. . .");
+                    Console.ReadKey();
+                }
+            }
         }
     }
 }

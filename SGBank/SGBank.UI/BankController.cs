@@ -62,7 +62,20 @@ namespace SGBank.UI
         /// </summary>
         private void AcctLookup()
         {
-            
+            Console.Clear();
+            _view.DisplayOpeningBanner("View Account");
+
+            string acctNum = _view.GetNumForLookup();
+            AcctLookupResponse a = _service.LookupAcct(acctNum);
+
+            if (a.Success)
+            {
+                _view.DisplayAcctDetails(a.Acct);
+            }
+            else
+            {
+                _view.DisplayErrorMsg(a.Msg);
+            }
         }
 
         /// <summary>
