@@ -19,9 +19,10 @@ namespace SGBank.BLL
         /// <returns>AcctLookupResponse with the proper success flag, Account obj if successfull, or error message if failed</returns>
         public AcctLookupResponse LookupAcct(string acctNum)
         {
-            AcctLookupResponse rsp = new AcctLookupResponse();
-
-            rsp.Acct = _acctRepo.ReadAcctById(acctNum);
+            AcctLookupResponse rsp = new AcctLookupResponse
+            {
+                Acct = _acctRepo.ReadAcctById(acctNum)
+            };
 
             if (rsp.Acct == null)
             {
