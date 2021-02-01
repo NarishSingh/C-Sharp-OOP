@@ -3,7 +3,7 @@ using SGBank.Models.Responses;
 
 namespace SGBank.BLL
 {
-    public class AcctService
+    public class AcctService : IAcctService
     {
         private IAcctRepo _acctRepo;
 
@@ -11,12 +11,7 @@ namespace SGBank.BLL
         {
             _acctRepo = acctRepo;
         }
-
-        /// <summary>
-        /// Look up an Account by its id
-        /// </summary>
-        /// <param name="acctNum">string for the account number</param>
-        /// <returns>AcctLookupResponse with the proper success flag, Account obj if successfull, or error message if failed</returns>
+        
         public AcctLookupResponse LookupAcct(string acctNum)
         {
             AcctLookupResponse rsp = new AcctLookupResponse
