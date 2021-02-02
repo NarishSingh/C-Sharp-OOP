@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using SGBankApp.Models;
+using SGBankApp.Models.Responses;
 
 namespace SGBankApp.UI.View
 {
@@ -70,12 +71,52 @@ namespace SGBankApp.UI.View
         /// <param name="a">Well formed Account obj</param>
         public void DisplayAcctDetails(Account a)
         {
+            Console.WriteLine();
             Console.WriteLine($"Account Number: {a.AcctNum}");
             Console.WriteLine($"Name: {a.Name}");
             Console.WriteLine($"Account Type: {a.Type}");
-            Console.WriteLine($"Balance: ${a.Balance:C}");
+            Console.WriteLine($"Balance: {a.Balance:C}");
 
             ViewConfirm();
+        }
+
+        /*DEPOSIT*/
+        /// <summary>
+        /// Read and validate a deposit amount
+        /// </summary>
+        /// <returns>decimal for cash amount over $0</returns>
+        public decimal GetDepositAmount()
+        {
+            return GetCashAmount("Deposit Amount: $");
+        }
+
+        /// <summary>
+        /// Display receipt for deposit transaction
+        /// </summary>
+        /// <param name="rsp">AcctDepositResponse obj from a successful deposit</param>
+        public void DisplayDepositReceipt(AcctDepositResponse rsp)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Deposit Completed");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            Console.WriteLine($"Account Number: {rsp.Acct.AcctNum}");
+            Console.WriteLine($"Old Balance: {rsp.OldBalance:C}");
+            Console.WriteLine($"Deposited: {rsp.Deposit:C}");
+            Console.WriteLine($"New Balance: {rsp.Deposit:C}");
+            
+            ViewConfirm();
+        }
+
+        /*WITHDRAW*/
+        /// <summary>
+        /// Read and validate a withdrawal amount
+        /// </summary>
+        /// <returns>decimal for cash amount over $0</returns>
+        public decimal GetWithdrawalAmount()
+        {
+            return GetCashAmount("Withdrawal Amount: $");
         }
 
         /*EXIT MESSAGE*/
@@ -155,6 +196,37 @@ namespace SGBankApp.UI.View
                     Console.WriteLine("Please enter valid Account Number");
                     Console.WriteLine("Press any key to continue. . .");
                     Console.ReadKey();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read and validate a cash amount for bank transactions
+        /// </summary>
+        /// <param name="prompt">string specifying input data and format</param>
+        /// <returns>decimal for a cash amount > 0</returns>
+        private static decimal GetCashAmount(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    Console.WriteLine("Please enter valid text");
+                    Console.WriteLine("Press any key to continue. . .");
+                    Console.ReadKey();
+                }
+                else if (!decimal.TryParse(input, out decimal output) || output <= 0)
+                {
+                    Console.WriteLine("Please enter valid cash amount.");
+                    Console.WriteLine("Press any key to continue. . .");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    return output;
                 }
             }
         }

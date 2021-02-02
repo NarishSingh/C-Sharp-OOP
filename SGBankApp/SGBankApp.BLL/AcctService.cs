@@ -1,4 +1,6 @@
-﻿using SGBankApp.Models.Interfaces;
+﻿using System.Data;
+using SGBankApp.BLL.DepositRules;
+using SGBankApp.Models.Interfaces;
 using SGBankApp.Models.Responses;
 
 namespace SGBankApp.BLL
@@ -29,6 +31,34 @@ namespace SGBankApp.BLL
                 rsp.Success = true;
             }
 
+            return rsp;
+        }
+
+        public AcctDepositResponse Deposit(string acctNum, decimal amount)
+        {
+            AcctDepositResponse rsp = new AcctDepositResponse
+            {
+                Acct = _acctRepo.ReadAcctById(acctNum)
+            };
+
+            if (rsp.Acct == null)
+            {
+                rsp.Success = false;
+                rsp.Msg = $"{acctNum} is not a valid account.";
+            }
+            else
+            {
+                rsp.Success = true;
+            }
+
+            IDeposit depositRule = DepositRulesFactory.Create(rsp.Acct.Type);
+            rsp = depositRule.Deposit(rsp.Acct, amount);
+
+            if (rsp.Success)
+            {
+                _acctRepo.SaveAcct(rsp.Acct);
+            }
+            
             return rsp;
         }
     }

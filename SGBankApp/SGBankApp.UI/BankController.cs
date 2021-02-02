@@ -39,6 +39,7 @@ namespace SGBankApp.UI
                         AcctLookup();
                         break;
                     case 2:
+                        DepositToAcct();
                         break;
                     case 3:
                         break;
@@ -71,6 +72,38 @@ namespace SGBankApp.UI
             if (a.Success)
             {
                 _view.DisplayAcctDetails(a.Acct);
+            }
+            else
+            {
+                _view.DisplayErrorMsg(a.Msg);
+            }
+        }
+        
+        /// <summary>
+        /// Deposit to an existing account
+        /// </summary>
+        private void DepositToAcct()
+        {
+            Console.Clear();
+            _view.DisplayOpeningBanner("Deposit");
+
+            string acctNum = _view.GetNumForLookup();
+            AcctLookupResponse a = _service.LookupAcct(acctNum);
+
+            if (a.Success)
+            {
+                decimal deposit = _view.GetDepositAmount();
+
+                AcctDepositResponse rsp = _service.Deposit(acctNum, deposit);
+
+                if (rsp.Success)
+                {
+                    _view.DisplayDepositReceipt(rsp);
+                }
+                else
+                {
+                    _view.DisplayErrorMsg(rsp.Msg);
+                }
             }
             else
             {
