@@ -42,6 +42,7 @@ namespace SGBankApp.UI
                         DepositToAcct();
                         break;
                     case 3:
+                        WithdrawFromAcct();
                         break;
                 }
 
@@ -99,6 +100,38 @@ namespace SGBankApp.UI
                 if (rsp.Success)
                 {
                     _view.DisplayDepositReceipt(rsp);
+                }
+                else
+                {
+                    _view.DisplayErrorMsg(rsp.Msg);
+                }
+            }
+            else
+            {
+                _view.DisplayErrorMsg(a.Msg);
+            }
+        }
+        
+        /// <summary>
+        /// Withdraw from an existing account
+        /// </summary>
+        private void WithdrawFromAcct()
+        {
+            Console.Clear();
+            _view.DisplayOpeningBanner("Withdrawal");
+
+            string acctNum = _view.GetNumForLookup();
+            AcctLookupResponse a = _service.LookupAcct(acctNum);
+
+            if (a.Success)
+            {
+                decimal withdrawal = _view.GetWithdrawalAmount();
+
+                AcctWithdrawResponse rsp = _service.Withdraw(acctNum, withdrawal);
+
+                if (rsp.Success)
+                {
+                    _view.DisplayWithdrawalReceipt(rsp);
                 }
                 else
                 {

@@ -104,7 +104,7 @@ namespace SGBankApp.UI.View
             Console.WriteLine($"Account Number: {rsp.Acct.AcctNum}");
             Console.WriteLine($"Old Balance: {rsp.OldBalance:C}");
             Console.WriteLine($"Deposited: {rsp.Deposit:C}");
-            Console.WriteLine($"New Balance: {rsp.Deposit:C}");
+            Console.WriteLine($"New Balance: {rsp.Acct.Balance:C}");
             
             ViewConfirm();
         }
@@ -117,6 +117,25 @@ namespace SGBankApp.UI.View
         public decimal GetWithdrawalAmount()
         {
             return GetCashAmount("Withdrawal Amount: $");
+        }
+        
+        /// <summary>
+        /// Display receipt for withdrawal transaction
+        /// </summary>
+        /// <param name="rsp">AcctDepositResponse obj from a successful withdrawal</param>
+        public void DisplayWithdrawalReceipt(AcctWithdrawResponse rsp)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Withdrawal Completed");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            Console.WriteLine($"Account Number: {rsp.Acct.AcctNum}");
+            Console.WriteLine($"Old Balance: {rsp.OldBalance:C}");
+            Console.WriteLine($"Withdrawn: {rsp.Withdrawal:C}");
+            Console.WriteLine($"New Balance: {rsp.Acct.Balance:C}");
+            
+            ViewConfirm();
         }
 
         /*EXIT MESSAGE*/

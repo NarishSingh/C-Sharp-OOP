@@ -13,10 +13,10 @@ namespace SGBankApp.BLL.DepositRules
             if (acct.Type != AcctType.Free)
             {
                 rsp.Success = false;
-                rsp.Msg = "Error: Non-Free Account hit Free Dep rules, contact IT.";
+                rsp.Msg = "Error: Non-Free Account hit Free Deposit rules, contact IT.";
             }
 
-            //free = cannot deposit more than $100 a day
+            //free = cannot deposit more than $100 at a time
             if (amount > 100)
             {
                 rsp.Success = false;

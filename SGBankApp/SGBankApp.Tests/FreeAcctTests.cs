@@ -20,7 +20,7 @@ namespace SGBankApp.Tests
         }
 
         [Test]
-        public void SaveFreeAcctTest()
+        public void DepositSaveFreeAcctTest()
         {
             const decimal dep = 100.00M;
             AcctService serv = AcctServiceFactory.Create();
