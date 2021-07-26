@@ -23,7 +23,7 @@ namespace ThreadingProj
             Console.WriteLine("\n");
             
             //put thread to sleep -> NOTE: if this isn't included, a block of "x"'s would've print in t2's thread
-            Thread.Sleep(1000); 
+            Thread.Sleep(1000); //1s
 
             //Joining threads -> wait for another to end
             Thread t2 = new Thread(Go);
