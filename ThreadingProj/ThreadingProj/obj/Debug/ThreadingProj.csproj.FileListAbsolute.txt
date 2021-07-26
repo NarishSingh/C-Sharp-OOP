@@ -1,0 +1,6 @@
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\ThreadingProj\ThreadingProj\bin\Debug\ThreadingProj.exe
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\ThreadingProj\ThreadingProj\bin\Debug\ThreadingProj.pdb
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\ThreadingProj\ThreadingProj\obj\Debug\ThreadingProj.csprojAssemblyReference.cache
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\ThreadingProj\ThreadingProj\obj\Debug\ThreadingProj.csproj.CoreCompileInputs.cache
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\ThreadingProj\ThreadingProj\obj\Debug\ThreadingProj.exe
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\ThreadingProj\ThreadingProj\obj\Debug\ThreadingProj.pdb
