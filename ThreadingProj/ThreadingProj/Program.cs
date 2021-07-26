@@ -6,13 +6,14 @@ namespace ThreadingProj
     internal class Program
     {
         private bool _done;
-        
+        private static readonly object _locker = new object(); //a reference type, used to contend a lock
+
         public static void Main(string[] args)
         {
             //separate thread
             Thread t = new Thread(WriteY)
             {
-                Name = "---The New Thread---"
+                Name = "---The Y Thread---"
             }; //basic ctor takes a delegate, basically a ref to a method
             t.Start();
 
@@ -31,23 +32,23 @@ namespace ThreadingProj
             t2.Start();
             t2.Join(); //wait for it to end
             Console.WriteLine("Thread t2 has ended!");
-            
+
             Console.WriteLine("\n");
             Thread.Sleep(500);
-            
+
             //Local State - each thread has its own mem stack
             //this will perform the delegate twice
             new Thread(WriteQm).Start(); //new thread
             WriteQm(); //on main
-            
+
             Console.WriteLine("\n");
             Thread.Sleep(500);
-            
+
             //Shared state - this will only write done once, they shared the _done var
             Program shared = new Program();
-            new Thread(shared.FlipTheSwitch).Start();
-            shared.FlipTheSwitch();
-            
+            new Thread(shared.FlipTheDoneSwitch).Start();
+            shared.FlipTheDoneSwitch();
+
             //shared state with lambda
             bool isDone = false;
             ThreadStart action = () =>
@@ -60,6 +61,15 @@ namespace ThreadingProj
             };
             new Thread(action).Start();
             action();
+            
+            Console.WriteLine("\n");
+            Thread.Sleep(500);
+            
+            //Locking threads - one thread locks until the lock becomes available -> thread safety
+            //will only print once thanks to lock
+            shared._done = false;
+            new Thread(shared.FlipDoneLocked).Start();
+            shared.FlipDoneLocked();
         }
 
         private static void WriteY()
@@ -82,11 +92,23 @@ namespace ThreadingProj
             Console.Write("-");
         }
 
-        private void FlipTheSwitch()
+        private void FlipTheDoneSwitch()
         {
             if (_done) return;
             _done = true;
             Console.WriteLine("Done!");
+        }
+
+        private void FlipDoneLocked()
+        {
+            if (!_done)
+            {
+                lock (_locker)
+                {
+                    if (!_done) Console.WriteLine("Done!");
+                    _done = true;
+                }
+            }
         }
     }
 }
