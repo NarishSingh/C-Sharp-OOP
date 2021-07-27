@@ -89,6 +89,12 @@ namespace ThreadingProj
             //pass in to .Start()
             Thread t4 = new Thread(PrintLine);
             t4.Start("Hello from the .Start()");
+            
+            Console.WriteLine("\n");
+            Thread.Sleep(500);
+            
+            //try catching in threads -> must do so in the delegate
+            new Thread(ThrowThis).Start();
         }
 
         private static void WriteY()
@@ -131,6 +137,18 @@ namespace ThreadingProj
         private static void PrintLine(object msgObj)
         {
             Console.WriteLine((string) msgObj);
+        }
+
+        private static void ThrowThis()
+        {
+            try
+            {
+                throw null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
