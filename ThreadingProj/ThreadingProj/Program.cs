@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace ThreadingProj
@@ -80,21 +79,37 @@ namespace ThreadingProj
             t3.Start();
 
             new Thread(() =>
-                {
-                    Console.WriteLine("Hello from multiline lambda");
-                    Console.WriteLine("We are multiple");
-                }
-            ).Start();
+            {
+                Console.WriteLine("Hello from multiline lambda");
+                Console.WriteLine("We are multiple");
+            }).Start();
 
             //pass in to .Start()
             Thread t4 = new Thread(PrintLine);
             t4.Start("Hello from the .Start()");
+
+            Console.WriteLine("\n");
+            Thread.Sleep(500);
+
+            //try catching in threads -> must do so in the delegate
+            new Thread(ThrowThis).Start();
             
             Console.WriteLine("\n");
             Thread.Sleep(500);
-            
-            //try catching in threads -> must do so in the delegate
-            new Thread(ThrowThis).Start();
+
+            //Signalling -> have a thread wait for a notif from other thread before doing anything
+            ManualResetEvent signal = new ManualResetEvent(false);
+
+            new Thread(() =>
+            {
+                Console.WriteLine("Waiting on signal. . .");
+                signal.WaitOne(); //wait for a signal
+                signal.Dispose(); //release the wait handler
+                Console.WriteLine("*Received*");
+            }).Start();
+
+            Thread.Sleep(2000);
+            signal.Set(); //reopen and allow other threads to proceed
         }
 
         private static void WriteY()
