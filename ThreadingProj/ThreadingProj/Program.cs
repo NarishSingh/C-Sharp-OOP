@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace ThreadingProj
@@ -44,7 +45,7 @@ namespace ThreadingProj
             Console.WriteLine("\n");
             Thread.Sleep(500);
 
-            //Shared state - this execute the delegate only once as they shared the _done var
+            //Shared state (not recommended)- this execute the delegate only once as they shared the _done var
             Program shared = new Program();
             new Thread(shared.FlipTheDoneSwitch).Start();
             shared.FlipTheDoneSwitch();
@@ -66,10 +67,28 @@ namespace ThreadingProj
             Thread.Sleep(500);
 
             //Locking threads - one thread locks until the lock becomes available -> thread safety
-            //will only print once thanks to lock
             shared._done = false;
-            new Thread(shared.FlipDoneLocked).Start();
+            new Thread(shared.FlipDoneLocked).Start(); //will only print once thanks to lock
             shared.FlipDoneLocked();
+
+            Console.WriteLine("\n");
+            Thread.Sleep(500);
+
+            //Passing data to thread
+            //lambda -> pass in ctor
+            Thread t3 = new Thread(() => Console.WriteLine("Hello from t3"));
+            t3.Start();
+
+            new Thread(() =>
+                {
+                    Console.WriteLine("Hello from multiline lambda");
+                    Console.WriteLine("We are multiple");
+                }
+            ).Start();
+
+            //pass in to .Start()
+            Thread t4 = new Thread(PrintLine);
+            t4.Start("Hello from the .Start()");
         }
 
         private static void WriteY()
@@ -107,6 +126,11 @@ namespace ThreadingProj
                 if (!_done) Console.WriteLine("Done!");
                 _done = true;
             }
+        }
+
+        private static void PrintLine(object msgObj)
+        {
+            Console.WriteLine((string) msgObj);
         }
     }
 }
