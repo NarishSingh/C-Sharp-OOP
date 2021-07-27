@@ -6,7 +6,7 @@ namespace ThreadingProj
     internal class Program
     {
         private bool _done;
-        private static readonly object _locker = new object(); //a reference type, used to contend a lock
+        private static readonly object Locker = new object(); //a reference type, used to contend a lock
 
         public static void Main(string[] args)
         {
@@ -44,7 +44,7 @@ namespace ThreadingProj
             Console.WriteLine("\n");
             Thread.Sleep(500);
 
-            //Shared state - this will only write done once, they shared the _done var
+            //Shared state - this execute the delegate only once as they shared the _done var
             Program shared = new Program();
             new Thread(shared.FlipTheDoneSwitch).Start();
             shared.FlipTheDoneSwitch();
@@ -61,10 +61,10 @@ namespace ThreadingProj
             };
             new Thread(action).Start();
             action();
-            
+
             Console.WriteLine("\n");
             Thread.Sleep(500);
-            
+
             //Locking threads - one thread locks until the lock becomes available -> thread safety
             //will only print once thanks to lock
             shared._done = false;
@@ -101,13 +101,11 @@ namespace ThreadingProj
 
         private void FlipDoneLocked()
         {
-            if (!_done)
+            if (_done) return;
+            lock (Locker)
             {
-                lock (_locker)
-                {
-                    if (!_done) Console.WriteLine("Done!");
-                    _done = true;
-                }
+                if (!_done) Console.WriteLine("Done!");
+                _done = true;
             }
         }
     }
