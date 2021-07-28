@@ -148,6 +148,19 @@ namespace ThreadingProj
 
             Console.WriteLine("\nTask is running. . .");
             Console.WriteLine($"Number of primes between 2 to 3,000,000 is {primes.Result}");
+            
+            //exceptions are wrapped in AggregateException of parallel programming, but are automatically rethrown for caller
+            //can always check the .InnerException prop for a specific exception
+            Task nullTask = Task.Run(() => throw null);
+            try
+            {
+                nullTask.Wait();
+            }
+            catch (AggregateException ae)
+            {
+                if (ae.InnerException is NullReferenceException) Console.WriteLine("Task returned null");
+                else throw;
+            }
         }
 
         private static void WriteY()
