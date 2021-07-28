@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ThreadingProj
 {
@@ -10,6 +13,8 @@ namespace ThreadingProj
 
         public static void Main(string[] args)
         {
+            /*THREADING PROPER*/
+            /*
             //separate thread
             Thread t = new Thread(WriteY)
             {
@@ -110,6 +115,39 @@ namespace ThreadingProj
 
             Thread.Sleep(2000);
             signal.Set(); //reopen and allow other threads to proceed
+            */
+
+            /*TASKS*/
+            //a higher level abstraction of a concurrent operation that may or may not be backed with a thread
+            Task.Run(() => Console.WriteLine("This is a task!\n"));
+
+            Thread.Sleep(500);
+
+            //wait
+            Task task = Task.Run(() =>
+            {
+                Thread.Sleep(2000);
+                Console.WriteLine("We slept, now the task is done\n");
+            });
+            Console.WriteLine($"Completed?: {task.IsCompleted}");
+            task.Wait();
+
+            Thread.Sleep(500);
+
+            //Task with result
+            Task<int> intTask = Task.Run(() =>
+            {
+                Console.WriteLine("We return a value");
+                return 3;
+            });
+            int result = intTask.Result;
+            Console.WriteLine(result);
+
+            Task<int> primes = Task.Run(() => Enumerable.Range(2, 3000000)
+                    .Count(n => Enumerable.Range(2, (int) Math.Sqrt(n) - 1).All(i => n % i > 0)));
+
+            Console.WriteLine("\nTask is running. . .");
+            Console.WriteLine($"Number of primes between 2 to 3,000,000 is {primes.Result}");
         }
 
         private static void WriteY()
