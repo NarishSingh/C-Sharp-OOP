@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -142,13 +142,21 @@ namespace ThreadingProj
             });
             int result = intTask.Result;
             Console.WriteLine(result);
+            
+            Thread.Sleep(500);
 
             Task<int> primes = Task.Run(() => Enumerable.Range(2, 3000000)
                     .Count(n => Enumerable.Range(2, (int) Math.Sqrt(n) - 1).All(i => n % i > 0)));
-
             Console.WriteLine("\nTask is running. . .");
-            Console.WriteLine($"Number of primes between 2 to 3,000,000 is {primes.Result}");
-            
+            // Console.WriteLine($"Number of primes between 2 to 3,000,000 is {primes.Result}");
+            //Continuation - use an awaiter, then chain another lambda on completion
+            TaskAwaiter<int> awaiter = primes.GetAwaiter();
+            awaiter.OnCompleted(() =>
+            {
+                int primesResult = awaiter.GetResult();
+                Console.WriteLine($"Number of primes between 2 to 3,000,000 is {primesResult}");
+            }); //todo not working
+
             //exceptions are wrapped in AggregateException of parallel programming, but are automatically rethrown for caller
             //can always check the .InnerException prop for a specific exception
             Task nullTask = Task.Run(() => throw null);
