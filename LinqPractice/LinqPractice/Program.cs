@@ -46,8 +46,7 @@ namespace LinqPractice
             IEnumerable<string> noVowelsAnon = vowelless.Where(item => item.Vowelless.Length > 2)
                 .Select(item => item.Original);
 
-            Console.WriteLine(
-                $"Anon Type version, >2 length when stripped of vowels: {string.Join(",", noVowelsAnon)}");
+            Console.WriteLine($"Anon Type version, >2 length, stripped of vowels: {string.Join(",", noVowelsAnon)}");
 
             Console.WriteLine("-------");
         }
