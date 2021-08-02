@@ -46,7 +46,7 @@
               "target": "Package",
               "version": "[5.0.8, )"
             },
-            "Microsoft.Extensions.Configuration": {
+            "Microsoft.Extensions.Configuration.Json": {
               "target": "Package",
               "version": "[5.0.0, )"
             }

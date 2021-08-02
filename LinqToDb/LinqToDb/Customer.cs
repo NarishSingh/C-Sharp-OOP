@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace LinqToDb
@@ -14,9 +12,13 @@ namespace LinqToDb
     public class CustomerContext : DbContext
     {
         public virtual DbSet<Customer> Customers { get; set; }
-        
-        protected override void OnConfiguring (DbContextOptionsBuilder builder) => 
-            builder.UseSqlServer(ConfigurationExtensions.GetConnectionString("DefaultConnection"));
+
+        protected override void OnConfiguring(DbContextOptionsBuilder builder)
+        {
+            IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            
+            builder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+        }
         
         protected override void OnModelCreating (ModelBuilder modelBuilder)
             => modelBuilder.Entity<Customer>().ToTable("Customer")
