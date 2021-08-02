@@ -8,15 +8,27 @@ namespace LinqToDb
         static void Main(string[] args)
         {
             using CustomerContext dbContext = new CustomerContext();
-            
-            IQueryable<string> query = dbContext.Customers
+
+            //Get names that contain a, capitalize
+            IQueryable<string> namesQueryA = dbContext.Customers
                 .Where(c => c.Name.Contains("a"))
                 .OrderBy(c => c.Name.Length)
                 .Select(c => c.Name.ToUpper());
 
-            foreach (string name in query)
+            Console.WriteLine("Names with A, capitalized:");
+            Console.WriteLine(string.Join(",", namesQueryA));
+            Console.WriteLine("-------");
+
+            //Get salaries below 100k
+            IQueryable<Customer> salaryQuery100k = dbContext.Customers
+                .Where(c => c.Salary < 100000)
+                .OrderBy(c => c.Salary)
+                .Select(c => c);
+
+            Console.WriteLine("Customers with salaries below 100k:");
+            foreach (Customer c in salaryQuery100k)
             {
-                Console.WriteLine(string.Join(",", name));
+                Console.WriteLine($"{c.Name} - {c.Salary:C}/yr");
             }
         }
     }
