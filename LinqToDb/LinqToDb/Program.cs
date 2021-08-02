@@ -46,12 +46,17 @@ namespace LinqToDb
 
             IEnumerable<string> noVowelsAnon = vowelless.Where(item => item.Vowelless.Length > 2)
                 .Select(item => item.Original);
-
             Console.WriteLine($"Anon Type version, >2 length, stripped of vowels: {string.Join(",", noVowelsAnon)}");
 
             Console.WriteLine("-------");
             
+            //use the indexer of .Where to skip even elements
+            IEnumerable<string> oddsOnly = names.Where((n, i) => i % 2 == 0);
+            Console.WriteLine($"Odd indexed names only: {string.Join(",", oddsOnly)}");
+            
             /*LINQ TO DB WITH EF CORE PRACTICE*/
+            Console.WriteLine("*******");
+            
             using CustomerContext dbContext = new CustomerContext();
 
             //Get names that contain a, capitalize
