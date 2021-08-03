@@ -106,12 +106,19 @@ namespace LinqToDb
             Console.WriteLine(string.Join(",", splitOriginsOrdered));
             Console.WriteLine("-------");
 
+            //Cross Join with SelectMany -> use a select from the same source within the SelectMany
+            //i.e. for every element1, reiterate the collection for element2, and select element1 vs element2
+            string[] players = {"Tom", "Dom", "Yom", "Pom"};
+            IEnumerable<string> matchups = players.SelectMany(p1 => players.Select(p2 => p1 + " vs " + p2));
+            foreach (string round in matchups) Console.WriteLine(round);
             Console.WriteLine("-------");
 
-            Console.WriteLine("-------");
 
-            /*LINQ TO DB WITH EF CORE PRACTICE*/
+            Console.WriteLine("-------");
+            
             Console.WriteLine("*******");
+            
+            /*LINQ TO DB WITH EF CORE PRACTICE*/
 
             using CustomerContext dbContext = new CustomerContext();
 
@@ -166,7 +173,29 @@ namespace LinqToDb
 
             Console.WriteLine("-------");
 
+            //Cross join with SelectMany - both syntactic versions
+            IQueryable<string> crossJoinQuery = from c in dbContext.Customers
+                from p in dbContext.Purchases
+                select c.Name + " might have bought a " + p.Description;
+            
+            IQueryable<string> crossJoinQuery2 = dbContext.Customers.SelectMany(c => dbContext.Purchases,
+                (c, p) => c.Name + " might have bought a " + p.Description);
+            
+            Console.WriteLine(string.Join("\n", crossJoinQuery2));
+            Console.WriteLine("-------");
+            
+            //inner join - both syntactic versions
+            IQueryable<string> innerJoinQuery = from c in dbContext.Customers
+                from p in dbContext.Purchases
+                where c.Id == p.CustomerId
+                select c.Name + " bought a " + p.Description;
+            
+            IQueryable<string> innerJoinQuery2 = dbContext.Customers
+                .SelectMany(c => dbContext.Purchases, (c, p) => new {c, p})
+                .Where(t => t.c.Id == t.p.CustomerId)
+                .Select(t => t.c.Name + " bought a " + t.p.Description);
 
+            Console.WriteLine(string.Join("\n", innerJoinQuery2));
             Console.WriteLine("-------");
         }
 
