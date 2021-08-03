@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -49,14 +50,41 @@ namespace LinqToDb
             Console.WriteLine($"Anon Type version, >2 length, stripped of vowels: {string.Join(",", noVowelsAnon)}");
 
             Console.WriteLine("-------");
-            
+
             //use the indexer of .Where to skip even elements
             IEnumerable<string> oddsOnly = names.Where((n, i) => i % 2 == 0);
             Console.WriteLine($"Odd indexed names only: {string.Join(",", oddsOnly)}");
-            
+
+            //Subqueries and obj hierarchies -> can use queries within other queries
+            string tempPath = Path.GetTempPath();
+            DirectoryInfo[] dirs = new DirectoryInfo(tempPath).GetDirectories();
+
+            var fileQuery = dirs
+                .Where(d => (d.Attributes & FileAttributes.System) == 0)
+                .Select(d => new
+                {
+                    DirectoryName = d.FullName,
+                    Created = d.CreationTime,
+                    Files = d.GetFiles()
+                        .Where(f => (f.Attributes & FileAttributes.Hidden) == 0)
+                        .Select(f => new
+                        {
+                            FileName = f.Name, f.Length
+                        })
+                }); //since we are using an anon type, must use var
+
+            foreach (var dirFiles in fileQuery)
+            {
+                Console.WriteLine($"Dir: {dirFiles.DirectoryName}");
+                foreach (var file in dirFiles.Files)
+                {
+                    Console.WriteLine($" {file.FileName} Len: {file.Length}");
+                }
+            }
+
             /*LINQ TO DB WITH EF CORE PRACTICE*/
             Console.WriteLine("*******");
-            
+
             using CustomerContext dbContext = new CustomerContext();
 
             //Get names that contain a, capitalize
@@ -88,6 +116,25 @@ namespace LinqToDb
 
             Console.WriteLine("Customers, paired:");
             foreach (string pairs in mixedQuery) Console.WriteLine(pairs);
+            Console.WriteLine("-------");
+
+            var purchasesQuery = dbContext.Customers
+                .Select(c => new
+                {
+                    c.Name,
+                    Purchases = dbContext.Purchases
+                        .Where(p => p.CustomerId == c.Id && p.Price > 100)
+                        .Select(p => new {p.Description, p.Price})
+                        .ToList()
+                });
+            foreach (var namePurchases in purchasesQuery)
+            {
+                Console.WriteLine($"Customer: {namePurchases.Name}");
+                foreach (var buyDetail in namePurchases.Purchases)
+                {
+                    Console.WriteLine($" - {buyDetail.Description} | $$$: {buyDetail.Price}");
+                }
+            }
             Console.WriteLine("-------");
         }
 
