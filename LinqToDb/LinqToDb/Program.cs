@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
 
 namespace LinqToDb
 {
@@ -24,7 +25,6 @@ namespace LinqToDb
             //or use .Min(this, selector)
             IEnumerable<string> shortestNames2 = names.Where(n => n.Length == names.Min(n2 => n2.Length));
             Console.WriteLine($"Shortest Names (aggregate version): {string.Join(", ", shortestNames2)}");
-
             Console.WriteLine("-------");
 
             //remove all vowels and select only the names >2 len
@@ -32,7 +32,6 @@ namespace LinqToDb
                 .Where(n => n.Length > 2)
                 .OrderBy(n => n);
             Console.WriteLine($"Vowels removed, >2 length: {string.Join(",", noVowels)}");
-
             Console.WriteLine("-------");
 
             //Anonymous types = require the use of the var keyword
@@ -48,12 +47,12 @@ namespace LinqToDb
             IEnumerable<string> noVowelsAnon = vowelless.Where(item => item.Vowelless.Length > 2)
                 .Select(item => item.Original);
             Console.WriteLine($"Anon Type version, >2 length, stripped of vowels: {string.Join(",", noVowelsAnon)}");
-
             Console.WriteLine("-------");
 
             //use the indexer of .Where to skip even elements
             IEnumerable<string> oddsOnly = names.Where((n, i) => i % 2 == 0);
             Console.WriteLine($"Odd indexed names only: {string.Join(",", oddsOnly)}");
+            Console.WriteLine("-------");
 
             //Subqueries and obj hierarchies -> can use queries within other queries
             string tempPath = Path.GetTempPath();
@@ -81,6 +80,35 @@ namespace LinqToDb
                     Console.WriteLine($" {file.FileName} Len: {file.Length}");
                 }
             }
+
+            Console.WriteLine("-------");
+
+            //SelectMany -> can be used to flatten an output
+            //ex. split full names, and map to one collection
+            //split returns an string[], but SelectMany will map it to one IEnumerable
+            string[] fullNames = {"Abigail Williams", "John Doe", "Ramsingh Sharma"};
+            IEnumerable<string> namesSplit = fullNames.SelectMany(n => n.Split());
+            Console.WriteLine(string.Join("|", namesSplit));
+            Console.WriteLine("-------");
+
+            //using multiple range variables
+            IEnumerable<string> splitOrigins = fullNames.SelectMany(full =>
+                full.Split()
+                    .Select(split => split + " came from " + full)); //Select within the SelectMany 
+            Console.WriteLine(string.Join(",", splitOrigins));
+
+            IEnumerable<string> splitOriginsOrdered = fullNames
+                .SelectMany(full => full.Split().Select(name => new {name, full})
+                    .OrderBy(x => x.full)
+                    .ThenBy(x => x.name)
+                    .Select(x => x.name + " came from " + x.full)
+                );
+            Console.WriteLine(string.Join(",", splitOriginsOrdered));
+            Console.WriteLine("-------");
+
+            Console.WriteLine("-------");
+
+            Console.WriteLine("-------");
 
             /*LINQ TO DB WITH EF CORE PRACTICE*/
             Console.WriteLine("*******");
@@ -135,6 +163,10 @@ namespace LinqToDb
                     Console.WriteLine($" - {buyDetail.Description} | $$$: {buyDetail.Price}");
                 }
             }
+
+            Console.WriteLine("-------");
+
+
             Console.WriteLine("-------");
         }
 
