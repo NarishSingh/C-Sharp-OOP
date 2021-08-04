@@ -11,6 +11,7 @@ namespace LinqToDb
         static void Main(string[] args)
         {
             /*STANDARD LINQ PRACTICE*/
+            /*
             string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
 
             //Select the shortest names = order by length so we can select the shortest length, which will be first
@@ -114,6 +115,7 @@ namespace LinqToDb
 
 
             Console.WriteLine("-------");
+            */
 
             Console.WriteLine("*******");
 
@@ -276,6 +278,20 @@ namespace LinqToDb
 
             Console.WriteLine("Customers and their purchases:");
             Console.WriteLine(string.Join("\n", joinQuery2));
+            Console.WriteLine("-------");
+
+            //If joining with order -> must generate an anon type to keep vars in scope
+            IQueryable<string> joinQueryOrdered = dbContext.Customers.Join(
+                    dbContext.Purchases,
+                    c => c.Id,
+                    p => p.CustomerId,
+                    (c, p) => new { c, p }
+                )
+                .OrderBy(x => x.p.Price)
+                .Select(x => x.c.Name + " bought a " + x.p.Description + " for $" + x.p.Price);
+
+            Console.WriteLine("Customers and their purchases, in order by price:");
+            Console.WriteLine(string.Join("\n", joinQueryOrdered));
             Console.WriteLine("-------");
         }
 
