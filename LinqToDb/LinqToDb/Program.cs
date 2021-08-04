@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic;
+using System.Threading.Channels;
 
 namespace LinqToDb
 {
@@ -12,7 +12,7 @@ namespace LinqToDb
         static void Main(string[] args)
         {
             /*STANDARD LINQ PRACTICE*/
-            string[] names = {"Tom", "Dick", "Harry", "Mary", "Jay"};
+            string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
 
             //Select the shortest names = order by length so we can select the shortest length, which will be first
             IEnumerable<string> shortestNames = names.Where(
@@ -86,7 +86,7 @@ namespace LinqToDb
             //SelectMany -> can be used to flatten an output
             //ex. split full names, and map to one collection
             //split returns an string[], but SelectMany will map it to one IEnumerable
-            string[] fullNames = {"Abigail Williams", "John Doe", "Ramsingh Sharma"};
+            string[] fullNames = { "Abigail Williams", "John Doe", "Ramsingh Sharma" };
             IEnumerable<string> namesSplit = fullNames.SelectMany(n => n.Split());
             Console.WriteLine(string.Join("|", namesSplit));
             Console.WriteLine("-------");
@@ -98,7 +98,7 @@ namespace LinqToDb
             Console.WriteLine(string.Join(",", splitOrigins));
 
             IEnumerable<string> splitOriginsOrdered = fullNames
-                .SelectMany(full => full.Split().Select(name => new {name, full})
+                .SelectMany(full => full.Split().Select(name => new { name, full })
                     .OrderBy(x => x.full)
                     .ThenBy(x => x.name)
                     .Select(x => x.name + " came from " + x.full)
@@ -108,7 +108,7 @@ namespace LinqToDb
 
             //Cross Join with SelectMany -> use a select from the same source within the SelectMany
             //i.e. for every element1, reiterate the collection for element2, and select element1 vs element2
-            string[] players = {"Tom", "Dom", "Yom", "Pom"};
+            string[] players = { "Tom", "Dom", "Yom", "Pom" };
             IEnumerable<string> matchups = players.SelectMany(p1 => players.Select(p2 => p1 + " vs " + p2));
             foreach (string round in matchups) Console.WriteLine(round);
             Console.WriteLine("-------");
@@ -117,7 +117,7 @@ namespace LinqToDb
             Console.WriteLine("-------");
             
             Console.WriteLine("*******");
-            
+
             /*LINQ TO DB WITH EF CORE PRACTICE*/
 
             using CustomerContext dbContext = new CustomerContext();
@@ -153,13 +153,14 @@ namespace LinqToDb
             foreach (string pairs in mixedQuery) Console.WriteLine(pairs);
             Console.WriteLine("-------");
 
+            //Left join
             var purchasesQuery = dbContext.Customers
                 .Select(c => new
                 {
                     c.Name,
                     Purchases = dbContext.Purchases
                         .Where(p => p.CustomerId == c.Id && p.Price > 100)
-                        .Select(p => new {p.Description, p.Price})
+                        .Select(p => new { p.Description, p.Price })
                         .ToList()
                 });
             foreach (var namePurchases in purchasesQuery)
@@ -177,25 +178,89 @@ namespace LinqToDb
             IQueryable<string> crossJoinQuery = from c in dbContext.Customers
                 from p in dbContext.Purchases
                 select c.Name + " might have bought a " + p.Description;
-            
+
             IQueryable<string> crossJoinQuery2 = dbContext.Customers.SelectMany(c => dbContext.Purchases,
                 (c, p) => c.Name + " might have bought a " + p.Description);
-            
+
             Console.WriteLine(string.Join("\n", crossJoinQuery2));
             Console.WriteLine("-------");
-            
+
             //inner join - both syntactic versions
             IQueryable<string> innerJoinQuery = from c in dbContext.Customers
                 from p in dbContext.Purchases
                 where c.Id == p.CustomerId
                 select c.Name + " bought a " + p.Description;
-            
+
             IQueryable<string> innerJoinQuery2 = dbContext.Customers
-                .SelectMany(c => dbContext.Purchases, (c, p) => new {c, p})
+                .SelectMany(c => dbContext.Purchases, (c, p) => new { c, p })
                 .Where(t => t.c.Id == t.p.CustomerId)
                 .Select(t => t.c.Name + " bought a " + t.p.Description);
 
             Console.WriteLine(string.Join("\n", innerJoinQuery2));
+            Console.WriteLine("-------");
+
+            //Left join with SelectMany -> will switch to inner join, must use DefaultIfEmpty
+            var leftJoinFlatQuery = from c in dbContext.Customers
+                from p in c.Purchases.DefaultIfEmpty()
+                select new
+                {
+                    c.Name,
+                    Description = p == null ? null : p.Description,
+                    Price = p == null ? (decimal?)null : p.Price
+                };
+
+            var leftJoinFlatQuery2 = dbContext.Customers
+                .SelectMany(c => c.Purchases.DefaultIfEmpty(), (c, p) =>
+                    new
+                    {
+                        c.Name,
+                        Description = p == null ? null : p.Description,
+                        Price = p == null ? (decimal?)null : p.Price
+                    });
+
+            Console.WriteLine("Customers, and purchases:");
+            foreach (var allCustOptionalPur in leftJoinFlatQuery2)
+            {
+                Console.Write($"{allCustOptionalPur.Name}");
+                Console.Write(allCustOptionalPur.Description != null
+                    ? $" - {allCustOptionalPur.Description} | ${allCustOptionalPur.Price:C}\n"
+                    : "\n");
+            }
+
+            Console.WriteLine("-------");
+
+            //left join with filtering -> must be done before DefaultIfEmpty
+
+            var leftJoinFlatQueryFiltered = from c in dbContext.Customers
+                from p in c.Purchases.Where(p => p.Price > 1000).DefaultIfEmpty()
+                select new
+                {
+                    c.Name,
+                    Description = p == null ? null : p.Description,
+                    Price = p == null ? (decimal?)null : p.Price
+                };
+
+            var leftJoinFlatQueryFiltered2 = dbContext.Customers
+                .SelectMany(
+                    c => c.Purchases.Where(p => p.Price > 1000).DefaultIfEmpty(),
+                    (c, p) =>
+                        new
+                        {
+                            c.Name,
+                            Description = p == null ? null : p.Description,
+                            Price = p == null ? (decimal?)null : p.Price
+                        }
+                );
+
+            Console.WriteLine("Customers, and purchases:");
+            foreach (var allCustOptionalPur in leftJoinFlatQueryFiltered2)
+            {
+                Console.Write($"{allCustOptionalPur.Name}");
+                Console.Write(allCustOptionalPur.Description != null
+                    ? $" - {allCustOptionalPur.Description} | ${allCustOptionalPur.Price:C}\n"
+                    : "\n");
+            }
+
             Console.WriteLine("-------");
         }
 
