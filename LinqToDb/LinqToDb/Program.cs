@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Channels;
 
 namespace LinqToDb
 {
@@ -115,7 +114,7 @@ namespace LinqToDb
 
 
             Console.WriteLine("-------");
-            
+
             Console.WriteLine("*******");
 
             /*LINQ TO DB WITH EF CORE PRACTICE*/
@@ -261,6 +260,22 @@ namespace LinqToDb
                     : "\n");
             }
 
+            Console.WriteLine("-------");
+
+            //Join operator - emits flat sequence
+            IQueryable<string> joinQuery = from c in dbContext.Customers
+                join p in dbContext.Purchases on c.Id equals p.CustomerId
+                select c.Name + " bought a " + p.Description;
+
+            IQueryable<string> joinQuery2 = dbContext.Customers.Join(
+                dbContext.Purchases,
+                c => c.Id, //input table
+                p => p.CustomerId, //join table on FK
+                (c, p) => c.Name + " bought a " + p.Description //select from results
+            );
+
+            Console.WriteLine("Customers and their purchases:");
+            Console.WriteLine(string.Join("\n", joinQuery2));
             Console.WriteLine("-------");
         }
 
