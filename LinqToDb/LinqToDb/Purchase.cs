@@ -10,5 +10,11 @@ namespace LinqToDb
         public string Description { get; set; }
         public decimal Price { get; set; }
         public virtual Customer Customer { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(CustomerId)}: {CustomerId}, {nameof(Date)}: {Date}, " +
+                   $"{nameof(Description)}: {Description}, {nameof(Price)}: {Price}, {nameof(Customer)}: {Customer}";
+        }
     }
 }

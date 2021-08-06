@@ -231,7 +231,6 @@ namespace LinqToDb
             Console.WriteLine("-------");
 
             //left join with filtering -> must be done before DefaultIfEmpty
-
             var leftJoinFlatQueryFiltered = from c in dbContext.Customers
                 from p in c.Purchases.Where(p => p.Price > 1000).DefaultIfEmpty()
                 select new
@@ -292,6 +291,42 @@ namespace LinqToDb
 
             Console.WriteLine("Customers and their purchases, in order by price:");
             Console.WriteLine(string.Join("\n", joinQueryOrdered));
+            Console.WriteLine("-------");
+
+            //GroupJoin - joins that yield a hierarchical, not a flat result
+            Customer[] custArr = dbContext.Customers.ToArray();
+            Purchase[] purchArr = dbContext.Purchases.ToArray();
+            IEnumerable<IEnumerable<Purchase>> groupQuery = from c in custArr
+                join p in purchArr on c.Id equals p.CustomerId
+                    into custPurchases
+                select custPurchases;
+
+            IEnumerable<IEnumerable<Purchase>> groupQuery2 = custArr.GroupJoin(
+                purchArr,
+                c => c.Id,
+                p => p.CustomerId,
+                (c, custPurchases) => custPurchases);
+
+            Console.WriteLine("Customers and their purchases, hierarchical");
+            foreach (IEnumerable<Purchase> purchases in groupQuery2) Console.WriteLine(string.Join(",", purchases));
+            Console.WriteLine("-------");
+
+            //GroupJoin with filter
+            IEnumerable<IEnumerable<Purchase>> filteredGroupQuery = from c in custArr
+                join p in purchArr.Where(p2 => p2.Price > 1000) on c.Id equals p.CustomerId
+                    into custPurchases
+                select custPurchases;
+
+            IEnumerable<IEnumerable<Purchase>> filteredGroupQuery2 = custArr.GroupJoin(
+                purchArr.Where(p2 => p2.Price > 1000),
+                c => c.Id,
+                p => p.CustomerId,
+                (c, custPur) => custPur
+            );
+
+            Console.WriteLine("Customers and their purchases > $1000, hierarchical");
+            foreach (IEnumerable<Purchase> purchases in filteredGroupQuery2)
+                Console.WriteLine(string.Join(",", purchases));
             Console.WriteLine("-------");
         }
 
