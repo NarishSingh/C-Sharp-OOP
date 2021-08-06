@@ -13,8 +13,9 @@ namespace LinqToDb
 
         public override string ToString()
         {
-            return $"{nameof(Id)}: {Id}, {nameof(CustomerId)}: {CustomerId}, {nameof(Date)}: {Date}, " +
-                   $"{nameof(Description)}: {Description}, {nameof(Price)}: {Price}, {nameof(Customer)}: {Customer}";
+            return
+                $"{nameof(Id)}: {Id}, {nameof(CustomerId)}: {CustomerId}, {nameof(Date)}: {Date.ToShortDateString()}, "
+                + $"{nameof(Description)}: {Description}, {nameof(Price)}: {Price}, {nameof(Customer)}: {Customer}";
         }
     }
 }

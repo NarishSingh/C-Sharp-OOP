@@ -11,7 +11,6 @@ namespace LinqToDb
         static void Main(string[] args)
         {
             /*STANDARD LINQ PRACTICE*/
-            /*
             string[] names = { "Tom", "Dick", "Harry", "Mary", "Jay" };
 
             //Select the shortest names = order by length so we can select the shortest length, which will be first
@@ -112,10 +111,16 @@ namespace LinqToDb
             IEnumerable<string> matchups = players.SelectMany(p1 => players.Select(p2 => p1 + " vs " + p2));
             foreach (string round in matchups) Console.WriteLine(round);
             Console.WriteLine("-------");
-
-
+            
+            //Zip operator - enumerate over 2 sequences like a zipper
+            int[] nums = { 1, 2, 3, 4, 5 };
+            string[] digitStrings = { "one", "two", "three", "four", "five" };
+            IEnumerable<string> zipperNums = nums.Zip(digitStrings, (n, s) => n + " = " + s);
+            Console.WriteLine(string.Join(", ", zipperNums));
             Console.WriteLine("-------");
-            */
+            
+            
+            Console.WriteLine("-------");
 
             Console.WriteLine("*******");
 
@@ -327,6 +332,14 @@ namespace LinqToDb
             Console.WriteLine("Customers and their purchases > $1000, hierarchical");
             foreach (IEnumerable<Purchase> purchases in filteredGroupQuery2)
                 Console.WriteLine(string.Join(",", purchases));
+            Console.WriteLine("-------");
+
+            //Lookups or a multi-dictionary, is an alternative to using joins
+            //key: customer id, value: purchase
+            ILookup<int?, Purchase> purchLookup = purchArr.ToLookup(p => p.CustomerId, p => p);
+
+            Console.WriteLine($"Customer Id 1 - {purchLookup[1].First().Customer.Name}'s Purchases:");
+            foreach (Purchase purchase in purchLookup[1]) Console.WriteLine(purchase);
             Console.WriteLine("-------");
         }
 
