@@ -87,4 +87,36 @@ Console.WriteLine(Point.GetQuadrant(pt3));
 int skipped = UsingWriter.WriteLinesTofile(new[] { "First", "Second", "Third", "Fourth", "Fifth" });
 Console.WriteLine($"skipped = {skipped}");
 
+
+/*Async Streams*/
+await foreach (int num in AsyncStreamNumbers.GenerateSequence())
+{
+    Console.WriteLine(num);
+}
+
+/*idx and range operators*/
+int[] hundredNums = Enumerable.Range(0, 100).ToArray();
+Console.WriteLine($"Last num: {hundredNums[^1]}");
+Console.WriteLine($"2nd to last num: {hundredNums[^2]}");
+Console.WriteLine($"39th to last num: {hundredNums[^39]}");
+
+Console.WriteLine($"{string.Join(",", hundredNums[..50])}"); //from beginning
+Console.WriteLine($"{string.Join(",", hundredNums[50..])}"); //from end
+Console.WriteLine($"{string.Join(",", hundredNums[25..75])}"); //in range, lower bound exclusive
+Console.WriteLine($"{string.Join(",", hundredNums[^75..^25])}"); //in range, lower bound exclusive also
+Console.WriteLine($"{string.Join(",", hundredNums[..])}"); //the entire arr
+
+Range firstTen = 1..10;
+Console.WriteLine($"{string.Join(",", hundredNums[firstTen])}"); //use of range as a variable
+
+/*Null coalescing assignment*/
+List<int> nullNums = null;
+int? i = null;
+
+nullNums ??= new List<int>();
+nullNums.Add(i ??= 17); //will assign
+nullNums.Add(i ??= 20); //will not assign
+
+Console.WriteLine(string.Join(",", nullNums));
+
 #endregion
