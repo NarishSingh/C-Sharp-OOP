@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Channels;
-using NewFeatures;
+﻿using NewFeatures;
 
 #region 9.0 Features
 
@@ -45,10 +43,7 @@ Console.WriteLine(c1.IsLetter());
 Console.WriteLine(c2.IsLetter());
 Console.WriteLine(c2.IsLetterOrSeparator());
 
-if (c1 as char? is not null)
-{
-    Console.WriteLine("Not null!");
-}
+if (c1 as char? is not null) Console.WriteLine("Not null!");
 
 #endregion
 
@@ -76,9 +71,9 @@ Console.WriteLine(myColor);
 
 Console.WriteLine($"{Address.ComputerSalesTax(new Address { State = "MI" }, 99.99m):C}"); //property pattern
 
-Point pt1 = new Point(10, -99);
-Point pt2 = new Point(0, 0);
-Point pt3 = new Point(-9, -19);
+Point pt1 = new(10, -99);
+Point pt2 = new(0, 0);
+Point pt3 = new(-9, -19);
 Console.WriteLine(Point.GetQuadrant(pt1));
 Console.WriteLine(Point.GetQuadrant(pt2));
 Console.WriteLine(Point.GetQuadrant(pt3));
