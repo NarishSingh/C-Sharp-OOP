@@ -23,12 +23,12 @@ GO
 CREATE TABLE Customer
 (
     Id     INT NOT NULL PRIMARY KEY,
-    Name   VARCHAR(30),
+    [Name]   VARCHAR(30),
     Salary INT
 );
 GO
 
-INSERT INTO Customer(Id, Name, Salary)
+INSERT INTO Customer(Id, [Name], Salary)
 VALUES (1, 'Tom', 90000),
        (2, 'Dick', 96000),
        (3, 'Harry', 89000),
@@ -50,15 +50,15 @@ GO
 CREATE TABLE Purchase
 (
     Id          INT            NOT NULL IDENTITY PRIMARY KEY,
-    Date        DATETIME2      NOT NULL,
-    Description NVARCHAR(30)   NOT NULL,
+    [Date]        DATETIME2      NOT NULL,
+    [Description] NVARCHAR(30)   NOT NULL,
     Price       DECIMAL(12, 2) NOT NULL,
     CustomerId  INT            NOT NULL
         REFERENCES Customer (Id)
 )
 GO
 
-INSERT INTO Purchase(Date, Description, Price, CustomerId)
+INSERT INTO Purchase([Date], [Description], Price, CustomerId)
 VALUES ('2021-01-01 00:00:00', 'Ferrari', 1234567.25, 1),
        ('2021-01-02 00:00:00', 'Lamborghini', 3.99, 1),
        ('2021-01-03 00:00:00', 'Moncler Coat', 100.56, 1),

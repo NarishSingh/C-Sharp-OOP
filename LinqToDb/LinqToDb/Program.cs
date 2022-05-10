@@ -57,19 +57,19 @@ namespace LinqToDb
             string tempPath = Path.GetTempPath();
             DirectoryInfo[] dirs = new DirectoryInfo(tempPath).GetDirectories();
 
-            var fileQuery = dirs
-                .Where(d => (d.Attributes & FileAttributes.System) == 0)
+            var fileQuery = dirs.Where(d => (d.Attributes & FileAttributes.System) == 0)
                 .Select(d => new
-                {
-                    DirectoryName = d.FullName,
-                    Created = d.CreationTime,
-                    Files = d.GetFiles()
-                        .Where(f => (f.Attributes & FileAttributes.Hidden) == 0)
-                        .Select(f => new
-                        {
-                            FileName = f.Name, f.Length
-                        })
-                }); //since we are using an anon type, must use var
+                    {
+                        DirectoryName = d.FullName,
+                        Created = d.CreationTime,
+                        Files = d.GetFiles()
+                            .Where(f => (f.Attributes & FileAttributes.Hidden) == 0)
+                            .Select(f => new
+                            {
+                                FileName = f.Name, f.Length
+                            })
+                    }
+                ); //since we are using an anon type, must use var
 
             foreach (var dirFiles in fileQuery)
             {
@@ -111,15 +111,14 @@ namespace LinqToDb
             IEnumerable<string> matchups = players.SelectMany(p1 => players.Select(p2 => p1 + " vs " + p2));
             foreach (string round in matchups) Console.WriteLine(round);
             Console.WriteLine("-------");
-            
+
             //Zip operator - enumerate over 2 sequences like a zipper
             int[] nums = { 1, 2, 3, 4, 5 };
             string[] digitStrings = { "one", "two", "three", "four", "five" };
             IEnumerable<string> zipperNums = nums.Zip(digitStrings, (n, s) => n + " = " + s);
             Console.WriteLine(string.Join(", ", zipperNums));
             Console.WriteLine("-------");
-            
-            
+
             Console.WriteLine("-------");
 
             Console.WriteLine("*******");
@@ -185,8 +184,11 @@ namespace LinqToDb
                 from p in dbContext.Purchases
                 select c.Name + " might have bought a " + p.Description;
 
-            IQueryable<string> crossJoinQuery2 = dbContext.Customers.SelectMany(c => dbContext.Purchases,
-                (c, p) => c.Name + " might have bought a " + p.Description);
+            IQueryable<string> crossJoinQuery2 = dbContext.Customers
+                .SelectMany(
+                    c => dbContext.Purchases,
+                    (c, p) => $"{c.Name} might have bought a {p.Description}"
+                );
 
             Console.WriteLine(string.Join("\n", crossJoinQuery2));
             Console.WriteLine("-------");
@@ -195,12 +197,12 @@ namespace LinqToDb
             IQueryable<string> innerJoinQuery = from c in dbContext.Customers
                 from p in dbContext.Purchases
                 where c.Id == p.CustomerId
-                select c.Name + " bought a " + p.Description;
+                select $"{c.Name} bought a {p.Description}";
 
             IQueryable<string> innerJoinQuery2 = dbContext.Customers
                 .SelectMany(c => dbContext.Purchases, (c, p) => new { c, p })
                 .Where(t => t.c.Id == t.p.CustomerId)
-                .Select(t => t.c.Name + " bought a " + t.p.Description);
+                .Select(t => $"{t.c.Name} bought a {t.p.Description}");
 
             Console.WriteLine(string.Join("\n", innerJoinQuery2));
             Console.WriteLine("-------");
@@ -222,7 +224,8 @@ namespace LinqToDb
                         c.Name,
                         Description = p == null ? null : p.Description,
                         Price = p == null ? (decimal?)null : p.Price
-                    });
+                    }
+                );
 
             Console.WriteLine("Customers, and purchases:");
             foreach (var allCustOptionalPur in leftJoinFlatQuery2)
@@ -230,7 +233,8 @@ namespace LinqToDb
                 Console.Write($"{allCustOptionalPur.Name}");
                 Console.Write(allCustOptionalPur.Description != null
                     ? $" - {allCustOptionalPur.Description} | ${allCustOptionalPur.Price:C}\n"
-                    : "\n");
+                    : "\n"
+                );
             }
 
             Console.WriteLine("-------");
@@ -263,7 +267,8 @@ namespace LinqToDb
                 Console.Write($"{allCustOptionalPur.Name}");
                 Console.Write(allCustOptionalPur.Description != null
                     ? $" - {allCustOptionalPur.Description} | ${allCustOptionalPur.Price:C}\n"
-                    : "\n");
+                    : "\n"
+                );
             }
 
             Console.WriteLine("-------");
@@ -271,13 +276,13 @@ namespace LinqToDb
             //Join operator - emits flat sequence
             IQueryable<string> joinQuery = from c in dbContext.Customers
                 join p in dbContext.Purchases on c.Id equals p.CustomerId
-                select c.Name + " bought a " + p.Description;
+                select $"{c.Name} bought a {p.Description}";
 
             IQueryable<string> joinQuery2 = dbContext.Customers.Join(
                 dbContext.Purchases,
                 c => c.Id, //input table
                 p => p.CustomerId, //join table on FK
-                (c, p) => c.Name + " bought a " + p.Description //select from results
+                (c, p) => $"{c.Name} bought a {p.Description}" //select from results
             );
 
             Console.WriteLine("Customers and their purchases:");
@@ -285,14 +290,15 @@ namespace LinqToDb
             Console.WriteLine("-------");
 
             //If joining with order -> must generate an anon type to keep vars in scope
-            IQueryable<string> joinQueryOrdered = dbContext.Customers.Join(
+            IQueryable<string> joinQueryOrdered = dbContext.Customers
+                .Join(
                     dbContext.Purchases,
                     c => c.Id,
                     p => p.CustomerId,
                     (c, p) => new { c, p }
                 )
                 .OrderBy(x => x.p.Price)
-                .Select(x => x.c.Name + " bought a " + x.p.Description + " for $" + x.p.Price);
+                .Select(x => $"{x.c.Name} bought a {x.p.Description} for ${x.p.Price}");
 
             Console.WriteLine("Customers and their purchases, in order by price:");
             Console.WriteLine(string.Join("\n", joinQueryOrdered));
@@ -310,7 +316,7 @@ namespace LinqToDb
                 purchArr,
                 c => c.Id,
                 p => p.CustomerId,
-                (c, custPurchases) => custPurchases);
+                (_, custPurchases) => custPurchases);
 
             Console.WriteLine("Customers and their purchases, hierarchical");
             foreach (IEnumerable<Purchase> purchases in groupQuery2) Console.WriteLine(string.Join(",", purchases));
@@ -326,7 +332,7 @@ namespace LinqToDb
                 purchArr.Where(p2 => p2.Price > 1000),
                 c => c.Id,
                 p => p.CustomerId,
-                (c, custPur) => custPur
+                (_, custPur) => custPur
             );
 
             Console.WriteLine("Customers and their purchases > $1000, hierarchical");

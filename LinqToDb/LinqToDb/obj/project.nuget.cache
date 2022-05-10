@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bKHqUN3bwNFMhmSMClGh6imZSTmWr6e7g3xYAuIzweKH1bjoITe4Q9sPd76Uu3WrDkvMTTf8KnlrPpWlfbefIQ==",
+  "dgSpecHash": "CmdUSt6kLaoRUYiQACJzSFYklkG3+FWt8j2Z/60eyMxoYr9mFHrIciB8NycP6C82Gzmq7kRWAd9shXG4+wh3WA==",
   "success": true,
   "projectFilePath": "C:\\Users\\naris\\Documents\\Work\\TECHHIRE\\REPOSITORY\\C-Sharp-OOP\\LinqToDb\\LinqToDb\\LinqToDb.csproj",
   "expectedPackageFiles": [
@@ -103,7 +103,8 @@
     "C:\\Users\\naris\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\naris\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\naris\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\naris\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
+    "C:\\Users\\naris\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
+    "C:\\Users\\naris\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.16\\microsoft.netcore.app.host.win-x64.5.0.16.nupkg.sha512"
   ],
   "logs": []
 }
