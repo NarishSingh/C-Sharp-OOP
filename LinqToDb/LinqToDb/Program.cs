@@ -91,9 +91,10 @@ namespace LinqToDb
             Console.WriteLine("-------");
 
             //using multiple range variables
-            IEnumerable<string> splitOrigins = fullNames.SelectMany(full =>
-                full.Split()
-                    .Select(split => split + " came from " + full)); //Select within the SelectMany 
+            IEnumerable<string> splitOrigins = fullNames.SelectMany(
+                full => full.Split()
+                    .Select(split => $"{split} came from {full}")
+            ); //Select within the SelectMany 
             Console.WriteLine(string.Join(",", splitOrigins));
 
             IEnumerable<string> splitOriginsOrdered = fullNames
