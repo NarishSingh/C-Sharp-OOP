@@ -1,0 +1,15 @@
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\bin\Debug\net6.0\NewFeatures.exe
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\bin\Debug\net6.0\NewFeatures.deps.json
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\bin\Debug\net6.0\NewFeatures.runtimeconfig.json
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\bin\Debug\net6.0\NewFeatures.dll
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\bin\Debug\net6.0\NewFeatures.pdb
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\NewFeatures.csproj.AssemblyReference.cache
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\NewFeatures.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\NewFeatures.AssemblyInfoInputs.cache
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\NewFeatures.AssemblyInfo.cs
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\NewFeatures.csproj.CoreCompileInputs.cache
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\NewFeatures.dll
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\ref\NewFeatures.dll
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\NewFeatures.pdb
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\NewFeatures.genruntimeconfig.cache
+C:\Users\naris\Documents\Work\TECHHIRE\REPOSITORY\C-Sharp-OOP\NewFeatures\NewFeatures\obj\Debug\net6.0\refint\NewFeatures.dll

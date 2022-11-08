@@ -1,5 +1,11 @@
 ﻿using NewFeatures;
 
+#region 10.0 Features
+
+// Record Structs
+
+#endregion
+
 #region 9.0 Features
 
 /*RECORDS*/
@@ -8,6 +14,7 @@ Console.WriteLine(p1);
 
 //val eq
 string[] nums = new string[2];
+Person nd = new("Nancy", "Davolio"); //Positional syntax for prop definition
 Person2 p2 = new("Nancy", "Devolio", nums);
 Person2 p3 = new("Nancy", "Devolio", nums);
 nums[0] = "555-555-5555";

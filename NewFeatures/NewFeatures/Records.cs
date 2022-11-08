@@ -20,6 +20,18 @@ public record Employee
     public string EmplId { get; init; } = default!;
 } //standard prop syntax -> all immutable
 
+//Record Structs
+public readonly record struct PointRec(double X, double Y, double Z);
+
+/*
+public record struct PointRec
+{
+    public double X { get; init; }
+    public double Y { get; init; }
+    public double Z { get; init; }
+}
+*/
+
 #region unused
 
 //can be made mutable, but this is not intended
